@@ -24,7 +24,7 @@ mkdir -p ${RPM_BUILD_ROOT}/var/run
 mknod ${RPM_BUILD_ROOT}/var/run/diald.ctl p
 
 %build
-./configure
+./configure -C
 make squeakyclean
 make
 
