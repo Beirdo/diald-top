@@ -27,11 +27,14 @@ clean squeakyclean::
 install:	install-client install-server
 
 install-client:	client
+	${INSTALL} -o root -g root -m 755 -d ${CLIENT_INSTALL_DIR}
+	${INSTALL} -o root -g root -m 755 -d ${MAN_DIR}
 	${INSTALL} -o ${OWNER} -g ${GROUP} ${INSTALLFLAGS} -m ${CLIENTMODE} \
 		   ${CLIENTBINS} ${CLIENT_INSTALL_DIR}
 	${INSTALL} -m 644 diald-top.8 ${MAN_DIR}
 
 install-server:	server
+	${INSTALL} -o root -g root -m 755 -d ${SERVER_INSTALL_DIR}
 	${INSTALL} -o ${OWNER} -g ${GROUP} ${INSTALLFLAGS} -m ${SERVERMODE} \
 		   ${SERVERBINS} ${SERVER_INSTALL_DIR}
 

@@ -9,17 +9,18 @@
 
 # Installation directories
 
-CLIENT_INSTALL_DIR = /usr/local/bin
-SERVER_INSTALL_DIR = /usr/local/bin
-MAN_DIR = /usr/local/man/man8
+prefix = ${ROOT}/usr/local
+CLIENT_INSTALL_DIR = ${prefix}/bin
+SERVER_INSTALL_DIR = ${prefix}/bin
+MAN_DIR = ${prefix}/man/man8
 
 # The OWNER, GROUP and MODE settings are not as obvious as they may appear.
 #  Please read the INSTALL file to find out what these should be
 
 OWNER = root
-GROUP = diald
-CLIENTMODE = 2550
-SERVERMODE = 2550
+GROUP = root
+CLIENTMODE = 500
+SERVERMODE = 500
 
 
 # Build Tools
