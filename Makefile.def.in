@@ -29,6 +29,7 @@ CC = @CC@
 LEX = @LEX@ -CFe	# NOTE: *MUST* be flex
 YACC = @YACC@ -dv	# NOTE: *MUST* be bison
 INSTALL = @INSTALL@
+RANLIB = @RANLIB@
 
 ifeq (${DEBUG},1)
    # Debug version
@@ -45,6 +46,8 @@ endif
 # Various libraries and include directories
 LIBS       = @LIBS@
 LEXLIB     = @LEXLIB@
+THREADLIB  = @PTHREAD_LIBS@
+THREADFLAGS = @PTHREAD_CFLAGS@
 
 
 # The named pipe that diald is using as a control FIFO.  You must run
@@ -59,14 +62,14 @@ CONF_FILE = @CONF_FILE@
 # No need to muck with anything below this
 
 # Client Definitions
-CLIENTINCLUDES = -I${PROJDIR}
-CLIENTLIB = ${LIBS} ${LEXLIB}
+CLIENTINCLUDES = -I${PROJDIR} ${THREADFLAGS}
+CLIENTLIB = ${LIBS} ${LEXLIB} ${THREADLIB}
 CLIENTDEFINES =
 CLIENTBINS = diald-top
 
 # Server Definitions
-SERVERINCLUDES = -I${PROJDIR}
-SERVERLIB = ${LIBS} ${LEXLIB}
+SERVERINCLUDES = -I${PROJDIR} ${THREADFLAGS}
+SERVERLIB = ${LIBS} ${LEXLIB} ${THREADLIB}
 SERVERDEFINES = 
 SERVERBINS = diald-top-server
 

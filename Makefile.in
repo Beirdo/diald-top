@@ -14,7 +14,7 @@ all::
 PROJDIR = @top_srcdir@
 PWD = `pwd`
 STRIPPED_PWD = $(notdir ${PWD})
-DIRS = client server
+DIRS = client-lib client server
 
 all clean distclean squeakyclean::
 	for i in ${DIRS}; do ${MAKE} $@ -C $$i ; done

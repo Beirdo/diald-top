@@ -101,6 +101,7 @@ AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_LEX
 AC_PROG_YACC
+AC_PROG_RANLIB
 
 GJH_REQUIRE_PROG($LEX, flex)
 GJH_REQUIRE_PROG($YACC, bison -y)
@@ -108,7 +109,17 @@ GJH_REQUIRE_PROG($YACC, bison -y)
 AC_LANG(C)
 AC_C_CONST
 
-ACX_PTHREAD()
+
+dnl Check for pthreads
+GJH_ARG_DISABLE(pthreads, [if pthreads support is configured to be enabled],
+  [Disable support for pthreads])
+
+if test "$ac_cv_option_pthreads" = "yes"; then
+  ACX_PTHREAD([have_pthreads=yes],[have_pthreads=no])
+else
+  have_pthreads=no
+fi
+
 
 dnl Check for obstacks
 GJH_ARG_DISABLE(obstack, [if obstack support is configured to be enabled],
@@ -187,6 +198,26 @@ AC_FUNC_MALLOC
 AC_CHECK_FUNCS([select socket strdup strstr gethostbyaddr getservbyport])
 AC_CHECK_FUNCS([getdomainname atexit memset strcasecmp strncasecmp])
 
+if test $have_pthreads = no; then
+  dnl Check for librt
+  GJH_ARG_DISABLE(librt, [if librt support is configured to be enabled],
+    [Disable support for librt])
+
+  if test "$ac_cv_option_librt" = "yes"; then
+    AC_CHECK_LIB(rt, shm_open)
+    if test $ac_cv_lib_rt_shm_open = yes; then
+      AC_CHECK_FUNCS([shm_open shm_unlink mmap])
+    else
+      AC_CHECK_FUNCS([shmget shmctl shmat shmdt])
+    fi
+  else
+    AC_CHECK_FUNCS([shmget shmctl shmat shmdt on_exit])
+  fi
+else
+  AC_DEFINE(HAVE_PTHREAD,1,
+    [Define if you have POSIX threads libraries and header files.])
+fi
+
 AC_CHECK_FUNCS([inet_pton])
 if test $ac_cv_func_inet_pton = no; then
   AC_CHECK_LIB(bind, inet_pton)
@@ -213,5 +244,5 @@ AC_EXEEXT
 AC_OBJEXT
 
 AC_CACHE_SAVE
-AC_CONFIG_FILES([Makefile Makefile.def server/Makefile client/Makefile client/version.h diald-top.8])
+AC_CONFIG_FILES([Makefile Makefile.def server/Makefile client-lib/Makefile client/Makefile client/version.h diald-top.8])
 AC_OUTPUT
