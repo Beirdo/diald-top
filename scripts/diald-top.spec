@@ -6,9 +6,9 @@ Copyright: GPL
 Group: Applications/System
 Url: http://diald-top.sourceforge.net/
 Packager: Gavin Hurlbut <gjhurlbu@users.sourceforge.net>
-Source: http://prdownloads.sourceforge.net/diald-top/diald-top-%{PACKAGE_VERSON}.tar.gz
+Source: http://prdownloads.sourceforge.net/diald-top/diald-top-%{version}.tar.gz
 #Patch: diald-top-2.1pl2-rpm.patch
-BuildRoot: %{_tmppath}/rpm/%{PACKAGE_NAME}-%{PACKAGE_VERSION}
+BuildRoot: %{_tmppath}/rpm/%{name}-%{version}
 Requires: ncurses, bison, flex
 
 %description
@@ -24,7 +24,7 @@ mkdir -p ${RPM_BUILD_ROOT}/var/run
 mknod ${RPM_BUILD_ROOT}/var/run/diald.ctl p
 
 %build
-configure
+./configure
 make squeakyclean
 make
 

@@ -1,0 +1,52 @@
+#! /bin/sh
+#
+# $Id$
+#
+# Build the distribution from the current tree.
+#
+
+VERSION=$1
+if [ x${VERSION}x = xx ] ; then
+  echo $0: No version string given.
+  exit 1
+fi
+
+# Extract just the last directory name part of the current directory
+# i.e. /usr/src/diald-top => diald-top
+TOP_DIR=`pwd | sed -e 's@.*/@@'`
+ORIG_PWD=`pwd`
+
+cd ..
+if [ -d diald-top-${VERSION} ] ; then 
+	echo Removing old archive directory.
+	rm -rf diald-top-${VERSION}
+fi
+
+echo Creating archive directory
+cp -Rv ${TOP_DIR} diald-top-${VERSION}
+
+echo Rebuilding the RPM spec file
+cat diald-top-${VERSION}/scripts/diald-top.spec | \
+	awk 'BEGIN {FS=":"} { if( $1 == "Version" )
+		{ print "Version: '${VERSION}'" } else { print $0 } }' > \
+	diald-top-${VERSION}/scripts/diald-top-${VERSION}.spec
+rm -f diald-top-${VERSION}/scripts/diald-top.spec
+
+echo Creating tarball from the archive directory, removing CVS directories
+find diald-top-${VERSION} -type f -print | grep -v CVS | \
+	xargs tar czvf diald-top-${VERSION}.tar.gz
+
+echo Copying tarball & spec to /usr/src/redhat
+cp diald-top-${VERSION}.tar.gz /usr/src/redhat/SOURCES
+cp diald-top-${VERSION}/scripts/diald-top-${VERSION}.spec /usr/src/redhat/SPECS
+
+cd /usr/src/redhat/SPECS
+rpm -ba diald-top-${VERSION}.spec
+
+echo Done building RPM files, copying them back
+cd ${ORIG_PWD}/..
+cp -v /usr/src/redhat/RPMS/i386/diald-top-${VERSION}* .
+cp -v /usr/src/redhat/SRPMS/diald-top-${VERSION}* .
+
+echo Removing archive directory
+rm -rf diald-top-${VERSION}

@@ -12,6 +12,8 @@ include Makefile.def
 all::
 
 PROJDIR = @top_srcdir@
+PWD = `pwd`
+STRIPPED_PWD = $(notdir ${PWD})
 DIRS = client server
 
 all clean distclean squeakyclean::
@@ -43,3 +45,5 @@ install-server:	server
 	${INSTALL} -o ${OWNER} -g ${GROUP} ${INSTALLFLAGS} -m ${SERVERMODE} \
 		   ${SERVERBINS} ${SERVER_INSTALL_DIR}
 
+dist:	all distclean
+	${PROJDIR}/scripts/make-dist @VERSION@
