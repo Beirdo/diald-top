@@ -1,0 +1,87 @@
+# $Id$
+#
+# Makefile for diald-top package
+# 
+# (c) 1995-97 Gavin J. Hurlbut
+# gjhurlbu@beirdo.uplink.on.ca
+#
+
+
+# Installation directories
+
+CLIENT_INSTALL_DIR = /usr/local/bin
+SERVER_INSTALL_DIR = /usr/local/bin
+MAN_DIR = /usr/local/man/man8
+
+# The OWNER, GROUP and MODE settings are not as obvious as they may appear.
+#  Please read the INSTALL file to find out what these should be
+
+OWNER = root
+GROUP = diald
+CLIENTMODE = 2550
+SERVERMODE = 2550
+
+
+# Build Tools
+CC = gcc
+LEX = flex -CFe
+YACC = bison -dvy
+INSTALL = install
+
+ifeq (${DEBUG},1)
+   # Debug version
+   CFLAGS = -O4 -pipe -g
+   LDFLAGS = 
+   INSTALLFLAGS =
+else
+   # Non-debug version
+   CFLAGS = -O4 -pipe
+   LDFLAGS = -s
+   INSTALLFLAGS = -s
+endif
+
+# Various libraries and include directories
+HEADCURSES = ncurses.h
+INCCURSES  = -I/usr/include/ncurses
+LIBCURSES  = -lncurses
+LIBLEX     = -lfl
+LIBRESOLV  = -lresolv
+
+
+# The named pipe that diald is using as a control FIFO.  You must run
+# diald with the "fifo ${DIALD_CTL}" option for this to work at all.  Be sure
+# that the pipe is writable by ${OWNER}.${GROUP} as defined above.
+
+CONTROL_FIFO = /var/run/diald.ctl
+
+
+# The configuration file for the server
+
+CONF_FILE = /etc/diald-top.conf
+
+
+# If you want to use glibc2.0 Object stacks, uncomment this (As the author
+# doesn't have glibc2.0, consider this experimental for now)
+
+DEFOBSTACKS = #-DUSE_OBSTACKS
+
+
+
+# No need to muck with anything below this
+
+# Client Definitions
+CLIENTINCLUDES = ${INCCURSES}
+CLIENTLIB = ${LIBCURSES} ${LIBLEX} ${LIBRESOLV}
+CLIENTDEFINES = -DCONTROL_FIFO=\"${CONTROL_FIFO}\" \
+		-DCURSHEAD=\"${HEADCURSES}\" \
+		-DYYDEBUG ${DEFOBSTACKS}
+CLIENTBINS = diald-top
+
+# Server Definitions
+SERVERINCLUDES =
+SERVERLIB = ${LIBLEX}
+SERVERDEFINES = -DCONTROL_FIFO=\"${CONTROL_FIFO}\" \
+		-DCONF_FILE=\"${CONF_FILE}\" \
+		-DYYDEBUG
+SERVERBINS = diald-top-server
+

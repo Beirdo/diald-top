@@ -1,0 +1,164 @@
+# $Id$
+
+All comments, bug reports would be appreciated.
+
+
+
+License Crap:
+=============
+
+	As far as I am concerned, if you want to hack on this, you are free
+to so at your pleasure.  It took me a total of about 5 hours or so to get it to 
+where it is now...  The only thing I ask is that if you hack on it and get
+something useful, please send me a diff (context diff would be best) of 
+what you have changed so I can incorporate it in the master version.  Oh, and
+tell me what revision number your baseline version was (defined as rev at the
+top of diald-top.c).
+
+
+Intallation:
+============
+
+Read the INSTALL file for instructions on how to install diald-top.
+
+
+
+Concept:
+========
+
+The concept behind diald-top is rather simple.  I got sick of trying to read
+a monitor pipe flying by on an extra VC, so I lusted after a more user
+friendly interface.  As I like the interface in top, I decided to start with
+that kind of look.  Fortunately, the designers of diald made my life rather
+easy by making the monitor pipe with an easy structure to implement. 
+
+I used ncurses for the interface to make my life simpler.  This also has the
+additional effect of making this possible to run on any type of terminal.  I
+have a VC4404 hooked up and this works great on it.  As ncurses uses the
+terminfo database, it SHOULD work fine on any terminal with correct terminfo
+entries.
+
+As of Version 0.0.1.1, I have added a limited command structure to diald-top.
+It is now possible to send diald commands to force/unforce, block/unblock and
+to bring the link up/down, and also to quit diald (immediately or when the
+link comes down) all from within diald-top.  This makes the program a lot more
+useful.
+
+The program also now reports the status of the link (UP, DOWN, CONNECT,
+START_LINK, STOP_LINK, DISCONNECT, CLOSE, etc).  This can still use some work
+but it is there now...
+
+As of v2.0, diald-top now has the capability to run remotely, communicating to
+a custom server (also included in the package) that farms the contents of the
+monitor FIFO out to the remotely running clients.  The communication is done
+using TCP/IP on port 1313 on the server.  The identity of the user that is 
+remotely running diald-top is verified using identd, and is then looked up in 
+a configuration file (by userid, IP address, netmask).
+
+So far, diald-top has been tested in the following configurations:
+	Server:
+	Linux 2.0.30
+
+	Client:
+	Linux 2.0.30		remote client, local client
+	BSDi 3.0		remote client
+
+If you get the client up and running on other platforms, please let me know
+the particulars and if you had to hack on the sources to get it to compile.
+For the platforms above, the only changes were in the Makefile.def as outlined
+in the INSTALL file.
+
+
+
+
+Future:
+=======
+
+I still would like to get the link status more useful.  There still are some
+more things that can be reported (blocked, forced) which should be possible 
+to do.
+
+Any suggestions would be useful  :)
+
+
+Bug Reports, Comments, etc
+==========================
+All email should be directed at:
+	gjhurlbu@beirdo.ott.uplink.on.ca
+
+Please DO send me email.  I enjoy reading email, and it would be nice to
+know that one of my little beastly programs is being used for something... :)
+
+
+------------------------------------------------------------------------------
+
+I will now list the suggestions I have received.  I am not sure how many of
+these will (or should) be implemented.
+
+
+ToDo Contibutors:
+=================
+		(sewilco@fieldday.mn.org)	12/06/95
+	o if packets with long TTL, do not display short TTL packets (< 1 min)
+	o decrease screen updates to once every 5 seconds when long time TTL
+	   packets abound
+	o perhaps show the number of short TTL packets
+
+C.J. Beck	(cjb@cjb.ico.net)		11/27/95
+	o show how long link has been up/down (in current state)
+	o show how much traffic has flowed through
+	    {ed. not very likely}
+
+Jan Fure	(jan_fure@io.com)		11/06/95
+	o sort display on priority of packets
+	    {ed. more likely on TTL}
+
+
+Patch Contributors:
+===================
+Jeff Epler	(jepler@inetnebr.com)		12/31/95
+	o Patches to resolve IP addresses and port numbers to services in an
+	   intelligent manner (will not bring the link up to resolve!)
+	o (based on Rev 0.0.1.1)
+	o patches incorporated into 0.0.1.2, then 0.0.1.3 (he sent two
+	   incremental patches)
+
+Dan Poirer	(poirer@pobox.com)		02/21/97
+	o Created a man page
+	o thank you very much :)
+	o based on Rev 0.7 - incorporated into Rev 0.8 release
+
+Mike Laster	(mlaster@galstar.com)		11/17/96
+	o truncation of local domain names (-l command line)
+	o based on Rev 0.6 - FINALLY incorporated into Rev 1.1 release with
+	   modifications
+
+Petr Hubeny	(psh@milada.troja.mff.cuni.cz)	01/04/97
+	o Removed ugly $ from the version number (modified from his code)
+	o Added interface and message displays
+	o based on Rev 0.6 - FINALLY incorporated into Rev 1.1 release with
+	   modifications
+
+Carl D. Roth	(roth@cse.ucsc.edu)		04/02/97
+	o Added message display
+	o based on Rev 1.0 - incorporated into Rev 1.1 release
+
+Steffen Ullrich	(ccrlphr@xensei.com)		08/06/97
+	o Nonblocking open of the control FIFO
+	o based on Rev 1.0 - incorporated into Rev 1.1 release
+
+Ian T Zimmerman	(itz@rahul.net)			08/27/97
+	o improvements to lex/yacc parser
+	o added some command line options and runtime commands
+	o added glibc obstack support (-DUSE_OBSTACKS)
+	o added timeout after opening monitor FIFO (I moved it slightly)
+	o minor fixes of resolve usage
+	o based on Rev 1.0 - incorporated into Rev 1.1 release
+
+Steffen Ullrich	(ccrlphr@xensei.com)		09/10/97
+	o use of select rather than timeouts
+	o added -L command line argument to log the monitor data to a file
+	  with timestamps to aid in debugging
+	o fixed some local allocation problems
+	o based on Rev 1.1 - incorporated into Rev 2.0 release
+

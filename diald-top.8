@@ -1,0 +1,96 @@
+.TH DIALD-TOP 8 "DIALD-TOP 2.0 - 1997.09.27"
+.SH NAME
+diald-top \- packet statistics and control program for diald
+.SH SYNOPSIS
+.B diald-top
+[-n] [-l] [-q] [-c \fIcontrol-fifo\fR] [-r \fIremote-ip\fR] [-L \fIlogfile\fR] [-h]
+.SH DESCRIPTION
+.LP
+.B Diald-top
+maintains a 'top'-like listing of all packets and their time to
+live for use with diald (tested with diald v0.16).
+.LP
+It also allows control of diald.
+.LP
+Currently clients have been tested in the following configurations:
+.PD 0
+.IP "  Linux 2.0.30         remote client, local client"
+.IP "  BSDi 3.0             remote client"
+.PD 1
+.SH COMMAND LINE ARGUMENTS
+.TP
+.B -n
+Display IP addresses in dotted-decimal format instead of resolving
+to hostnames (when the link is up).
+.TP
+.B -l
+Truncate hostnames of local hosts (anything with a domain matching the domain
+of the local machine).
+.TP
+.B -q
+Quit if there is a parse error when interpreting the monitor FIFO.
+.TP
+.B -c \fIcontrol-fifo
+Use the named file as the control fifo, instead of whatever default
+was compiled into diald-top.  The default will be shown in the usage
+information shown by
+.B diald-top -h
+.TP
+.B -r \fIremote-ip
+Connects to a diald-top-server over the network using a TCP connection to port
+1313 on the machine at IP address provided.  This is done instead of using
+local control and monitor FIFOs.
+.B NOTE:
+Currently the IP address must be in numeric form (xxx.xxx.xxx.xxx) rather than
+a domain name.
+.TP
+.B -L \fIlogfile
+Creates a log file with all monitor FIFO input logged with a
+timestamp to aid in debugging.
+.B NOTE:
+This is likely to create a very large file
+if left running!
+.TP
+.B -h
+Display help on command-line arguments, and print name of
+default fifo.
+.SH OPERATION
+While diald-top is running, you may enter the following commands.
+.TP
+.B c
+Send a command to the diald control FIFO.
+Valid commands include:
+up, down, force, unforce, block, unblock, quit, and delay-quit. 
+.TP
+.B h
+Display help on operation.
+.TP
+.B l
+Toggle truncation of local hostnames.
+.TP
+.B n
+Toggle numeric IP vs. resolved names.
+.TP
+.B q
+Quit diald-top.
+.TP
+.B ^R
+Redraw screen.
+.SH SEE ALSO
+.LP
+dctrl(1), diald-examples(5), diald-control(5), diald-monitor(5),
+diald(8), pppd(8), chat(8), expect(1)
+.SH AUTHOR
+.LP
+Gavin J. Hurlbut (gjhurlbu@beirdo.ott.uplink.on.ca)
+.SH PATCHES BY
+.PD 0
+.IP "12/31/95  Jeff Epler       (jepler@inetnebr.com)"
+.IP "11/17/96  Mike Laster      (mlaster@galstar.com)"
+.IP "01/04/97  Petr Hubeny      (psh@milada.troja.mff.cuni.cz)"
+.IP "02/21/97  Dan Poirer       (poirer@pobox.com)"
+.IP "04/02/97  Carl D. Roth     (roth@cse.ucsc.edu)"
+.IP "08/06/97  Steffen Ullrich  (ccrlphr@xensei.com)"
+.IP "08/27/97  Ian T Zimmerman  (itz@rahul.net)"
+.IP "09/10/97  Steffen Ullrich  (ccrlphr@xensei.com)"
+

@@ -1,0 +1,229 @@
+$Id$
+
+Required to make/install/use diald-top
+--------------------------------------
+a)	GCC (or possibly another ANSI compliant C compiler)   
+b)	NCurses library (ver 1.9.9e tested)
+c)	diald v0.14, v0.15 or v0.16 (may work with other versions)
+d)	GNU make, install, and other such system utilities needed for compiling
+e)	SLIP support in your kernel (and PPP if you want to use it too)
+	-- may be modular if you wish (this is actually a diald requirement)
+
+Optional
+--------
+a)	if you have glibc installed and want to use the objstack feature, 
+	uncomment the -DUSE_OBJSTACKS in the CFLAGS line in the Makefile.def.
+b)	BIND libraries (libresolv.so.4 has been tested).  If you do not have
+	this library on your system, be sure to remove the value of LIBRESOLV
+	in Makefile.def.  This is only a necessity to include if you are NOT
+	running named on your system, but want resolving of IPs to work.
+c)	Flex & Bison to regenerate the parser engine.  Pre-generated code is
+	included, so you don't HAVE to generate it again unless you are
+	changing the parser.
+
+
+Intallation instructions for diald-top
+--------------------------------------
+1)	compile, and configure diald v0.16.  Once you have diald working to
+	  your satisfaction, diald-top will become more useful.  Of course
+	  you may want to use diald-top to help you set up diald.  At least
+	  have diald installed
+
+2)	be sure to run diald with the "fifo" option
+
+3)	create the control FIFO (the one to use in the "fifo" option of
+	  diald with:
+		mknod /var/run/diald.ctl p
+	  (substitute in your chosen fifo filename at will).
+
+4)	Edit the Makefile.def file to set the compiler options and other such
+	things.  The following 5 steps here will help with some of the 
+	specific configuration items you may want assistance with.  The
+	following are settings you will need to customize to match your system
+	if you want to have any chance of getting the compile to work :)
+
+		HEADCURSES = ncurses.h
+		INCCURSES  = -I/usr/include/ncurses
+		LIBCURSES  = -lncurses
+		LIBLEX     = -lfl
+		LIBRESOLV  = -lresolv
+
+
+5)	For the following Makefile.def entries follow the directions in this
+	step:
+		OWNER = root
+		GROUP = diald
+		CLIENTMODE = 2550
+		SERVERMODE = 2550
+
+  a)	If you wish to have only root controlling diald (not a bad idea)
+    i)		Change the owner/mode of the FIFO file (from step 3) to:
+			owner:	root
+			group:	root
+			mode:	rw------- (600)
+    ii)		Change the Makefile.def settings to:
+			OWNER = root
+			GROUP = root
+			CLIENTMODE = 500
+			SERVERMODE = 500
+
+  b)	If you wish to provide access to diald control to a limited group
+	  of users (rather than just root):
+    i)		Add a new entry to /etc/group
+			diald::200:root,<user1>,<user2>
+		    where the users in the group are separated by commas
+		    (choose your own group number at will)
+    ii)		Change the owner/mode of the FIFO file (from step 3) to:
+			owner:  root
+			group:  diald
+			mode:   rw-rw--- (660)
+    iii)	Change the Makefile.def settings to:
+			OWNER = root
+			GROUP = diald
+			CLIENTMODE = 2550
+			SERVERMODE = 2550
+
+  c)	If you wish to give EVERYONE control over diald (why would you?):
+	   NOTE:	This is VERY dangerous.  Only do this if you are
+			absolutely sure that you know what you are doing.
+			Your ISP bills may be extremely large as a result of
+			this if you have unscrupulous users.  You have been
+			warned :)
+    i)		Create the diald group (as in step 5b.i)
+    ii)		Change the owner/mode of the FIFO file (from step 3) to:
+			owner:	root
+			group:	diald
+			mode:	rw-rw-rw- (666)
+    iii)	Change the Makefile.def settings to:
+			OWNER = root
+			GROUP = diald
+			CLIENTMODE = 2555 
+			SERVERMODE = 2555 
+
+6)	The CLIENT_INSTALL_DIR and SERVER_INSTALL_DIR should be set to where
+	you want the finished binaries to be.  This should be on the path of
+	the intended users.  Also check that the MAN_DIR is set to where you
+	want the man page to be placed.
+
+7)	If you named your control FIFO (from step 3) anything other than the
+	default I listed above you will have to change the CONTROL_FIFO
+	variable to match your FIFO's full path.  This filename will be used as
+	the default at run-time.  It is still possible to override this when
+	running the client, but that is an annoyance to have to do all the
+	time.
+
+8)	If you want to use glibc2.0 Object stacks, change the DEFOBSTACKS line
+	(As the author doesn't have glibc2.0, consider this experimental for
+	now)
+		DEFOBSTACKS = -DUSE_OBSTACKS
+
+9)	Change the CONF_FILE line to give the full pathname of the server
+	config file.  Note that a sample config file is included in the server
+	subdirectory (actually the config file for my machine).
+
+10)	Make and install the server & client binaries (and man page):  You
+	will have to do the make install as root most likely.
+		make; make install
+
+	NOTE:	If you are debugging the program (like if you are getting
+		segfaults and want to send me a backtrace of the coredump),
+		you will need to do:
+			make DEBUG=1; make DEBUG=1 install
+
+	If you only want to compile the client (for a remote client for example)
+		make client; make install-client
+
+	Also to make only the server:
+		make server; make install-server
+
+
+
+Running diald-top client
+------------------------
+If you want to use the default control FIFO defined at compile time,
+just type:
+	diald-top
+
+To use a different control FIFO, use -c filename
+
+Make sure the FIFO file exists and has the correct permissions.
+
+To suppress resolving of IP addresses in the diald-top display use the -n
+option.  Note:  this is toggle-able during run-time.
+
+An option of -h will give help on the command line options and show the 
+default (compiled-in) FIFO filename.
+
+To use diald-top as a remote client:
+	diald-top -r server-ip
+Where server-ip is in *NUMERIC* format.
+
+
+Running diald-top server
+------------------------
+To start the diald-top server:
+	diald-top-server
+
+The server automatically detaches itself from the tty and runs in the
+background.  It logs information via syslog (uses LOG_LOCAL5).  To change the
+log authority to something else, edit the loglevels.h file in the server
+subdirectory.  In future releases, this will be a Makefile.def option, as will
+be disabling syslog logging completely.
+
+To force the server to reread its configuration without quitting, and to
+reauthenticate all connected clients with the new configuration, kill it
+with SIGHUP  (as in kill -HUP serverpid)
+
+To get the server to shut down, kill it with SIGINT or SIGTERM.  This will of
+course disconnect all connected clients.  (BTW, SIGTERM is the default signal
+sent by kill, so "kill serverpid" will send it SIGTERM).
+
+You can also use telnet to port 1313 to connect to the server (as this is
+basically what the client does).  This can be useful to remotely send the
+diald a "force" command (from properly authenticated users only of course).
+To disconnect from the server when using telnet, use "close" and *NOT*
+"quit" as the quit command is sent to diald, causing diald to immediately
+bring down the link.
+
+I will be fleshing out the server more as time goes on, but I wanted to release
+this as it is now.
+
+
+Strange behaviours
+------------------
+1)	If diald-top seems to hang before displaying anything on the screen
+	or even clearing the screen, check to make sure diald is running, and
+	that you specified the correct filename for the control FIFO, and
+	finally that the control FIFO has the correct permissions.
+
+2)	Sometimes diald seems to die unexpectedly when quitting diald-top,
+	and sometimes even while diald-top is still running.  I don't know
+	what's with that.
+
+3)	If diald-top segfaults on you, please recompile it with make DEBUG=1,
+	install it with make DEBUG=1 install, enable core dumps and email
+	me a backtrace of the coredump.
+
+	To enable coredumps:
+		BASH:	ulimit -c 1000000
+		(T)CSH:	limit core 1000000
+
+	To get a backtrace of the coredump:
+		gdb -c core -s diald-top -r diald-top
+	in gdb:
+		bt
+		quit
+
+	Please email me the entire output of the gdb as this will help me find
+	and kill the bug immensely.  If the backtrace shows something like
+		(gdb) bt
+		#0  0x8049a5b in free ()
+		#1  0x8ca586cd in ?? ()
+		#2  0x804c69d in free ()
+		#3  0x804be50 in free ()
+		#4  0x8049899 in free ()
+		#5  0x8049271 in free ()
+		#6  0x804919b in free ()
+	then you have likely stripped the symbols out of the binary.  Remake it
+	with DEBUG=1 and redo the coredump, etc.
+
