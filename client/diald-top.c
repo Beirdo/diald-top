@@ -6,6 +6,9 @@
  * gjhurlbu@beirdo.uplink.on.ca
  *
  * $Log$
+ * Revision 1.2  2000/06/12 13:56:18  gjhurlbu
+ * Fixing Bug #107361 - input_file initialized with stderr which is not a constant in newer Linux systems.
+ *
  * Revision 1.1.1.1  2000/06/11 05:57:08  gjhurlbu
  * Initial check-in from diald-top v2.0
  *
@@ -82,9 +85,6 @@
  *
  */
 
-
-#define PATCHLEVEL ""
-
 static char rcsid[] = "$Id$";
 
 /* Included Header Files */
@@ -109,6 +109,7 @@ static char rcsid[] = "$Id$";
 #include "defines.h"
 #include "prototypes.h"
 #include "externs.h"
+#include "version.h"
 
 
 /* Global Variables */
@@ -133,7 +134,7 @@ static void handlesig( int signum )
 int main(int argc, char **argv)
 {
 	int ret;
-	char rev[] = "$Revision$" PATCHLEVEL;
+	char rev[] = "Revision: " DIALD_TOP_RELEASE DIALD_TOP_PATCHLEVEL;
 	extern FILE *yyin;
 	fd_set fd_ctl;
 	int fd_yyin;
@@ -143,7 +144,7 @@ int main(int argc, char **argv)
         obstack_init(&the_obstack);
 #endif /* USE_OBSTACKS */
 
-	revision = fix_version( rev );
+	revision = &rev[0];
 
 	read_command_line(argc,argv);
 
@@ -194,22 +195,6 @@ int main(int argc, char **argv)
 	}
 }
 
-
-char *fix_version( char *in ) 
-{
-	char *out = strdup( in );
-	char *begin = out;
-
-	for( ; *in != '\0'; in++ ) {
-		if( *in != '$' ) {
-			*out = *in;
-			out++;
-		}
-	}
-	*out = '\0';
-
-	return( begin );
-}
 
 
 int read_command_line(int argc, char **argv)
