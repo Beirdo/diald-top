@@ -26,14 +26,14 @@
 #ifdef HAVE_OBSTACK
 #include <obstack.h>
 extern struct obstack the_obstack;
-#define lex_free(s) ((char*)(s) == yynullstr ? (void)0 : \
-                     (obstack_free(&the_obstack, (char*)(s))))
+#define lex_free(s) ((unsigned char*)(s) == yynullstr ? (void)0 : \
+                     (obstack_free(&the_obstack, (unsigned char*)(s))))
 #else				/*
 				 * !HAVE_OBSTACK
 				 */
 #include <stdlib.h>
-#define lex_free(s) ((char*)(s) == yynullstr ? (void)0 : \
-                     (free((char*)(s))))
+#define lex_free(s) ((unsigned char*)(s) == yynullstr ? (void)0 : \
+                     (free((unsigned char*)(s))))
 #endif				/*
 				 * USE_OBSTACKS 
 				 */
@@ -77,7 +77,7 @@ extern time_t   now;
 
 extern int      yacc_key;
 extern int      yydebug;
-extern char    *yynullstr;
+extern unsigned char    *yynullstr;
 extern void     (*yy_input_func) (char *, int *, int);
 
 extern WINDOW  *full;

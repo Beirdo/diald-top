@@ -53,11 +53,11 @@ resolve(const char *aaddr)
 
     if (!
 #if HAVE_INET_PTON
-       inet_pton(AF_INET, aaddr, &addr)
+	inet_pton(AF_INET, aaddr, &addr)
 #else
-       inet_aton(aaddr, &addr)
+	inet_aton(aaddr, &addr)
 #endif
-	  || numeric)
+	|| numeric)
 	return aaddr;
 
     if (probetab(addr))
@@ -98,7 +98,7 @@ resolve(const char *aaddr)
 	hr->time_resolved = now;
 #ifdef HAVE_GETDOMAINNAME
 	truncate_hostname(hr->trunc);
-#endif /* HAVE_GETDOMAINNAME */
+#endif				/* HAVE_GETDOMAINNAME */
     }
 
     if (!hr)
@@ -108,9 +108,9 @@ resolve(const char *aaddr)
 	return (hr->trunc);
     else
 	return (hr->name);
-#else  /* !HAVE_GETHOSTBYADDR */
+#else				/* !HAVE_GETHOSTBYADDR */
     return aaddr;
-#endif /* HAVE_GETHOSTBYADDR */
+#endif				/* HAVE_GETHOSTBYADDR */
 
 }
 
@@ -171,14 +171,14 @@ truncate_hostname(char *hostname)
 	ptr[-1] = '\0';
     }
 }
-#endif /* HAVE_GETDOMAINNAME */
-#endif /* HAVE_GETHOSTBYADDR */
+#endif				/* HAVE_GETDOMAINNAME */
+#endif				/* HAVE_GETHOSTBYADDR */
 
 const char     *
 service(int port, const char *proto)
 {
 #ifdef HAVE_GETSERVBYPORT
-    char           *sstr;
+    unsigned char  *sstr;
     struct servent *serv;
     static int      first_time = 1;
 
@@ -209,7 +209,7 @@ service(int port, const char *proto)
 	sstr = obstack_finish(&the_obstack);
     }
 
-#else				/*
+#else				/* 
 				 * !HAVE_OBSTACK
 				 */
 
@@ -222,28 +222,28 @@ service(int port, const char *proto)
 	sstr = strdup(serv->s_name);
     }
 
-#endif				/*
+#endif				/* 
 				 * HAVE_OBSTACK
 				 */
 
     return (sstr ? sstr : yynullstr);
-#else /* !HAVE_GETSERVBYPORT */
+#else				/* !HAVE_GETSERVBYPORT */
     char           *sstr;
 
 #ifdef HAVE_OBSTACK
     sstr = obstack_alloc(&the_obstack, 6);
     snprintf(sstr, 6, "%-5d", port);
-#else				/*
+#else				/* 
 				 * !HAVE_OBSTACK
 				 */
     sstr = (char *) malloc(6);
     if (sstr) {
-        snprintf(sstr, 6, "%-5d", port);
+	snprintf(sstr, 6, "%-5d", port);
     }
-#endif				/*
+#endif				/* 
 				 * HAVE_OBSTACK
 				 */
     return (sstr ? sstr : yynullstr);
 
-#endif /* HAVE_GETSERVBYPORT */
+#endif				/* HAVE_GETSERVBYPORT */
 }

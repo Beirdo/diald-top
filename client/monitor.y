@@ -14,8 +14,13 @@ extern int      lex_testkey(void);
 #define YYERROR_VERBOSE
 #endif /* YYDEBUG */
 
-#define YYSTYPE long int
 %}
+
+%union {
+    long int      number;
+    unsigned char character;
+    unsigned char *string;
+}
 
 %token _STATE
 %token _INTERFACE
@@ -24,22 +29,36 @@ extern int      lex_testkey(void);
 %token _MESSAGE
 %token _QUEUE
 %token _ENDQUEUE
-%token _TIME
-%token _NUM
-%token _IP
+%token <string> _TIME
+%token <number> _NUM
+%token <string> _IP
+%token <number> _PORT
+%token <string> _STRING
 %token _NEWLINE
-%token _PORT
-%token _STRING
 %token _WOULDBLOCK
+
+%type <number> num
+%type <string> time
+%type <string> string
+%type <string> stringnl
+%type <string> ip
+%type <string> ipnl
+%type <number> port
 
 %start blurbs
 
 %%
 
 num:	_NUM _NEWLINE
+	{
+		$$ = $1;
+	}
 	;
 
 time:	_TIME _NEWLINE
+	{
+		$$ = $1;
+	}
 	| _WOULDBLOCK
 	{
 		YYACCEPT;
@@ -47,19 +66,46 @@ time:	_TIME _NEWLINE
 	;
 
 string:	_STRING
+	{
+		$$ = $1;
+	}
 	| string _STRING
+	{
+		$$ = (unsigned char *)realloc($1, strlen($1)+strlen($2)+1);
+		if( $$ != NULL )
+		{
+			strcat( $$, $2 );
+		} 
+		else
+		{
+			$$ = $1;
+		}
+		lex_free( $2 );
+	}
 	;
 
 stringnl:	string _NEWLINE
+	{
+		$$ = $1;
+	}
 	;
 
 ip:	_IP
+	{
+		$$ = $1;
+	}
 	;
 
 ipnl:	_IP _NEWLINE
+	{
+		$$ = $1;
+	}
 	;
 
 port:	_PORT
+	{
+		$$ = $1;
+	}
 	;
 
 blurbs:                        /* empty */

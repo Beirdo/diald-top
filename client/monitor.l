@@ -9,18 +9,16 @@
 #include <sys/time.h>
 #include <unistd.h>
 
-#define YYSTYPE long int
-
 #include "y.tab.h"
 #include "defines.h"
 #include "externs.h"
 #include "prototypes.h"
 
-YYSTYPE         lex_string(void);
-YYSTYPE         lex_char(void);
-YYSTYPE         lex_num(void);
+unsigned char *lex_string(void);
+unsigned char lex_char(void);
+long int      lex_num(void);
 
-char           *yynullstr = "";
+unsigned char   *yynullstr = "";
 int             yacc_eof;
 int             yacc_block;
 extern int      errno;
@@ -128,14 +126,14 @@ PORT	"/"[1-9][0-9]*
 ^END" "QUEUE	return( _ENDQUEUE );
 ^MESSAGE	BEGIN(pre_message); return( _MESSAGE );
 
-{TIME}		yylval = lex_string();	return( _TIME );
-{DIGIT}+	yylval = lex_num();	return( _NUM );
-{IP}		yylval = lex_string();	return( _IP );
-{PORT}		yytext++;  yyleng--;  yylval = lex_num();  return( _PORT );
+{TIME}		yylval.string = lex_string();	return( _TIME );
+{DIGIT}+	yylval.number = lex_num();	return( _NUM );
+{IP}		yylval.string = lex_string();	return( _IP );
+{PORT}		yytext++;  yyleng--;  yylval.number = lex_num();  return( _PORT );
 " "		/* ignore spaces */
-{NONDIGIT}{NOSLASH}*("/"({NONDIGIT}{NOSLASH}*)?)* { yylval = lex_string();
+{NONDIGIT}{NOSLASH}*("/"({NONDIGIT}{NOSLASH}*)?)* { yylval.string = lex_string();
                                                     return( _STRING ); }
-<in_message>^[^\n]*$    { yylval = lex_string(); return( _STRING ); }
+<in_message>^[^\n]*$    { yylval.string = lex_string(); return( _STRING ); }
 <pre_message>\n		BEGIN(in_message); return( _NEWLINE );
 <in_message>\n          BEGIN(INITIAL); return( _NEWLINE );
 \n                      return( _NEWLINE );
@@ -152,43 +150,34 @@ PORT	"/"[1-9][0-9]*
 static char     rcsid[] =
     "$Id$";
 
-YYSTYPE
+unsigned char *
 lex_string(void)
 {
-    char           *str;
+    unsigned char           *str;
 
 #ifndef HAVE_OBSTACK
-    str = (char *) malloc(yyleng + 1);
+    str = (unsigned char *) malloc(yyleng + 1);
     if (!str)
-	return ((YYSTYPE) (&yynullstr[0]));
+	return (yynullstr);
     memcpy(str, yytext, yyleng);
     str[yyleng] = '\0';
 #else
-    str = (char *) (obstack_copy0(&the_obstack, yytext, yyleng));
+    str = (unsigned char *) (obstack_copy0(&the_obstack, yytext, yyleng));
     if (!str)
-	return ((YYSTYPE) (&yynullstr[0]));
+	return (yynullstr);
 #endif
 
-    return ((YYSTYPE) str);
+    return (str);
 }
 
-YYSTYPE
+long int
 lex_num(void)
 {
-    char           *str;
-    YYSTYPE         ret;
-
-    str = alloca(yyleng + 1);
-    if (str == 0)
-	return (-1);
-    memcpy(str, yytext, yyleng);
-    str[yyleng] = 0;
-    ret = (YYSTYPE) atoi(str);
-    return (ret);
+    return( atoi(yytext) );
 }
 
-YYSTYPE
+unsigned char
 lex_char(void)
 {
-    return ((YYSTYPE) yytext[0]);
+    return ((unsigned char) yytext[0]);
 }
