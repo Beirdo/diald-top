@@ -17,6 +17,8 @@
 #define HASHSIZE	65536
 #define LINELENGTH	256
 #define MAXBUFS		256
+#define MAX_QUERY_LOAD  200
+#define HOSTREC_EXPIRE  (60*60*24*2) /* 2 days */
 
 #define LINE_COPYRIGHT	0
 #define LINE_REVISION 	1

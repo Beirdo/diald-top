@@ -6,6 +6,10 @@
  * gjhurlbu@beirdo.uplink.on.ca
  *
  * $Log$
+ * Revision 1.1.1.1  2000/06/11 05:57:09  gjhurlbu
+ * Initial check-in from diald-top v2.0
+ *
+ *
  * Revision 2.0  1997/09/28 21:21:13  gjhurlbu
  * Release 2.0
  *
@@ -226,7 +230,13 @@ void init_fifo( void ) {
 			perror("Could not open diald monitor pipe");
 			exit(1);
 		}
+                /* itz Sun Jan 17 13:36:07 PST 1999: don't overload
+                   the fifo with useless junk */
+#ifdef TESTER
 		sprintf(line,"monitor %s",monitor);
+#else
+                sprintf(line,"monitor %d %s",0x3b,monitor);
+#endif
 	}
 
 	fifo_command(line);

@@ -6,6 +6,10 @@
  * gjhurlbu@beirdo.uplink.on.ca
  *
  * $Log$
+ * Revision 1.1.1.1  2000/06/11 05:57:09  gjhurlbu
+ * Initial check-in from diald-top v2.0
+ *
+ *
  * Revision 2.0  1997/09/28 21:21:15  gjhurlbu
  * Release 2.0
  *
@@ -49,7 +53,6 @@ static char rcsid[] = "$Id$";
 #include "prototypes.h"
 #include "externs.h"
 
-
 struct hostrec *hosthash[HASHSIZE];
 
 const char *resolve( const char *aaddr )
@@ -62,29 +65,43 @@ const char *resolve( const char *aaddr )
 
 	if( probetab(addr) )	hr = gettab(addr);
 
-	if( !hr && !strcmp(curr_state,"UP") ) {
+	if( (!hr || now-hr->time_resolved > HOSTREC_EXPIRE) &&
+           !strcmp(curr_state,"UP") &&
+           rxload[0]+rxload[1]+rxload[2] < MAX_QUERY_LOAD && 
+           txload[0]+txload[1]+rxload[2] < MAX_QUERY_LOAD ) {
 		struct hostent *host;
 
 		host = gethostbyaddr( (char*)&addr, sizeof(addr), AF_INET );
 		if( !host ) {
 			if( h_errno == HOST_NOT_FOUND ||
 			    h_errno == NO_ADDRESS ) {
-				hr = gettab(addr);
+				if (!hr) hr = gettab(addr);
+                                else {
+                                        free(hr->name);
+                                        free(hr->trunc);
+                                }
 				hr->name  = strdup(aaddr);
 				hr->trunc = strdup(aaddr);
 				hr->addr  = addr;
+                                hr->time_resolved = now;
 			}
 			return aaddr;
 		}
 
-		hr = gettab(addr);
+                if (!hr) hr = gettab(addr);
+                else {
+                        free(hr->name);
+                        free(hr->trunc);
+                }
 		hr->name  = strdup(host->h_name);
 		hr->trunc = strdup(host->h_name);
 		hr->addr  = addr;
+                hr->time_resolved = now;
 		truncate_hostname(hr->trunc);
 	}
 
-	if( !hr )		return aaddr;
+	if( !hr ) return aaddr;
+
 	if( trunc_local_hosts )	return( hr->trunc );
 	else			return( hr->name );
 }

@@ -105,11 +105,13 @@ ToDo Contibutors:
 	o perhaps show the number of short TTL packets
 
 C.J. Beck	(cjb@cjb.ico.net)		11/27/95
+	now	()				06/11/00
 	o show how long link has been up/down (in current state)
 	o show how much traffic has flowed through
 	    {ed. not very likely}
 
 Jan Fure	(jan_fure@io.com)		11/06/95
+	now	(janfure@home.com)		06/11/00
 	o sort display on priority of packets
 	    {ed. more likely on TTL}
 
@@ -124,16 +126,19 @@ Jeff Epler	(jepler@inetnebr.com)		12/31/95
 	   incremental patches)
 
 Dan Poirer	(poirer@pobox.com)		02/21/97
+	now	()				06/11/00
 	o Created a man page
 	o thank you very much :)
 	o based on Rev 0.7 - incorporated into Rev 0.8 release
 
 Mike Laster	(mlaster@galstar.com)		11/17/96
+	now	(mlaster@metavillage.com)	06/11/00
 	o truncation of local domain names (-l command line)
 	o based on Rev 0.6 - FINALLY incorporated into Rev 1.1 release with
 	   modifications
 
 Petr Hubeny	(psh@milada.troja.mff.cuni.cz)	01/04/97
+	now	(psh@capitol.cz)		06/11/00
 	o Removed ugly $ from the version number (modified from his code)
 	o Added interface and message displays
 	o based on Rev 0.6 - FINALLY incorporated into Rev 1.1 release with
@@ -148,6 +153,7 @@ Steffen Ullrich	(ccrlphr@xensei.com)		08/06/97
 	o based on Rev 1.0 - incorporated into Rev 1.1 release
 
 Ian T Zimmerman	(itz@rahul.net)			08/27/97
+	now	(itz@speakeasy.org)		06/11/00
 	o improvements to lex/yacc parser
 	o added some command line options and runtime commands
 	o added glibc obstack support (-DUSE_OBSTACKS)
@@ -162,3 +168,7 @@ Steffen Ullrich	(ccrlphr@xensei.com)		09/10/97
 	o fixed some local allocation problems
 	o based on Rev 1.1 - incorporated into Rev 2.0 release
 
+Ian T Zimmerman (itz@transbay.net)		01/18/99
+	now	(itz@speakeasy.org)		06/11/00
+	o DNS request throttled on LOAD information from the fifo
+	o based on Rev 2.0 - incorporated into sourceforge CVS stream 06/11/00

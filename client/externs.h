@@ -30,6 +30,9 @@ extern struct obstack the_obstack;
                      (free((char*)(s))))
 #endif /* USE_OBSTACKS */
 
+#include <sys/types.h>
+#include <time.h>
+
 #include "defines.h"
 #include "hostrec.h"
 
@@ -57,6 +60,9 @@ extern int quit_if_parse_error;
 extern int remotemode;
 extern int state;
 extern int trunc_local_hosts;
+extern int rxload[3];
+extern int txload[3];
+extern time_t now;
 
 extern int yacc_key;
 extern int yydebug;

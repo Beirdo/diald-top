@@ -6,6 +6,10 @@
  * gjhurlbu@beirdo.uplink.on.ca
  *
  * $Log$
+ * Revision 1.1.1.1  2000/06/11 05:57:09  gjhurlbu
+ * Initial check-in from diald-top v2.0
+ *
+ *
  * Revision 2.0  1997/09/28 21:21:12  gjhurlbu
  * Release 2.0
  *
@@ -50,6 +54,10 @@ static char rcsid[] = "$Id$";
 #include "parser.h"
 #include "externs.h"
 
+int rxload[3] = {0, 0, 0};
+int txload[3] = {0, 0, 0};
+time_t now;
+
 void do_status( int up, int force, int im, int im_itm, int im_tm, int im_fuzz, 
 	char *im_to, char *force_to, char *to )
 {
@@ -65,6 +73,10 @@ void do_load( int itxtotal, int irxtotal )
 {
 #ifdef TESTER
 	printf( "Load: Tx = %d; Rx = %d\n", itxtotal, irxtotal );
+#else
+        rxload[0] = rxload[1]; txload[0] = txload[1];
+        rxload[1] = rxload[2]; txload[1] = txload[2];
+        rxload[2] = irxtotal; txload[2] = itxtotal;
 #endif
 }
 
@@ -140,6 +152,7 @@ void do_queue()
 #else
 	int i;
 
+        now = time(0);
 	count = 0;
         werase(sub);
         for( i = 0; i < numbuff; i++ ) { 
