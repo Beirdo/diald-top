@@ -9,7 +9,7 @@
 include ../Makefile.def
 
 PROJDIR = @top_srcdir@
-OBJS = thread.o shared_memory.o
+OBJS = thread.o shared_memory.o semaphores.o
 DESTLIB = libclient.a
 
 ${PROJDIR}/% : %

@@ -23,6 +23,19 @@ typedef int ThreadID_t;
 #endif
 #endif
 
+#ifdef HAVE_PTHREAD
+typedef struct
+{
+    pthread_mutex_t mutex;
+    pthread_cond_t  condAboveThresh;
+    int             value;
+} SemID_t;
+#else
+#ifdef HAVE_SEMGET
+typedef int SemID_t;
+#endif
+#endif
+
 
 /* Prototypes */
 
