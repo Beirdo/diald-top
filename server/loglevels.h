@@ -18,4 +18,8 @@
 #define LOGINFO		(LOGFACILITY | LOG_INFO)
 #define LOGDEBUG	(LOGFACILITY | LOG_DEBUG)
 
+#ifndef LOG_PERROR
+#define LOG_PERROR 0	/* For Solaris */
+#endif
+
 #endif

@@ -31,11 +31,11 @@ static char     rcsid[] =
 #include <stdio.h>
 #include <string.h>
 #include <netdb.h>
+#include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <stdlib.h>
-#include <malloc.h>
 
 #include "hostrec.h"
 #include "defines.h"
@@ -51,7 +51,7 @@ resolve(const char *aaddr)
     struct in_addr  addr;
     struct hostrec *hr = NULL;
 
-    if (!inet_aton(aaddr, &addr) || numeric)
+    if (!inet_pton(AF_INET, aaddr, &addr) || numeric)
 	return aaddr;
 
     if (probetab(addr))

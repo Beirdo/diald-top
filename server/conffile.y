@@ -1,6 +1,7 @@
 %{
 #include <string.h>
 #include <stdio.h>
+#include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -30,7 +31,7 @@ ip:	_IP
 	{
 		struct in_addr addr;
 
-		inet_aton( (char *)$1, &addr );
+		inet_pton( AF_INET, (char *)$1, &addr );
 		lex_free( $1 );
 
 		$$ = addr.s_addr;

@@ -36,7 +36,6 @@ static char     rcsid[] =
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <malloc.h>
 
 #include <netdb.h>
 #include <netinet/in.h>
@@ -147,7 +146,7 @@ init_fifo(void)
 	struct sockaddr_in sa;
 	struct in_addr  remaddr;
 
-	if (!inet_aton(remoteip, &remaddr)) {
+	if (!inet_pton(AF_INET, remoteip, &remaddr)) {
 	    fprintf(stderr, "Invalid remote IP: %s\n", remoteip);
 	    exit(1);
 	}

@@ -1,7 +1,6 @@
 %option always-interactive
 %{
 #include <string.h>
-#include <malloc.h>
 #include <stdlib.h>
 #include <sys/times.h>
 #include <stdio.h>
@@ -9,6 +8,8 @@
 #include <sys/types.h>
 #include <sys/time.h>
 #include <unistd.h>
+
+#define YYSTYPE long int
 
 #include "y.tab.h"
 #include "defines.h"

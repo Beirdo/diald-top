@@ -35,6 +35,7 @@ static char     rcsid[] =
 
 #include "parser.h"
 #include "externs.h"
+#include "prototypes.h"
 
 int             rxload[3] = { 0, 0, 0 };
 int             txload[3] = { 0, 0, 0 };

@@ -23,9 +23,10 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <malloc.h>
+#include <stdlib.h>
 #include <syslog.h>
 #include <errno.h>
+#include <string.h>
 
 #include "config.h"
 #include "fds.h"

@@ -1,5 +1,6 @@
 %{
 #include <stdio.h>
+#include <string.h>
 #include "parser.h"
 #include "externs.h"
 
@@ -12,6 +13,8 @@ extern int      lex_testkey(void);
 #if YYDEBUG == 1
 #define YYERROR_VERBOSE
 #endif /* YYDEBUG */
+
+#define YYSTYPE long int
 %}
 
 %token _STATE

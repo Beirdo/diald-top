@@ -20,10 +20,11 @@
 #include <string.h>
 #include <stdio.h>
 #include <signal.h>
+#include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <malloc.h>
+#include <stdlib.h>
 
 #include "config.h"
 #include "protos.h"

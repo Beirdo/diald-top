@@ -129,6 +129,14 @@ dnl Checks for libraries.
 dnl AC_CHECK_LIB(fl, main)
 AC_CHECK_LIB(ncurses, printw)
 
+# Extra libraries on some systems
+case "${host}" in
+  *solaris* )
+    AC_CHECK_LIB(socket, socket)
+    AC_CHECK_LIB(nsl, bind)
+    ;;
+esac
+
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
 AC_TYPE_PID_T
