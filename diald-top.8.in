@@ -1,4 +1,4 @@
-.TH DIALD-TOP 8 "DIALD-TOP 2.0 - 1997.09.27"
+.TH DIALD-TOP 8 "DIALD-TOP @VERSIONMAJOR@.@VERSIONMINOR@@VERSIONPATCH@"
 .SH NAME
 diald-top \- packet statistics and control program for diald
 .SH SYNOPSIS
@@ -82,7 +82,7 @@ dctrl(1), diald-examples(5), diald-control(5), diald-monitor(5),
 diald(8), pppd(8), chat(8), expect(1)
 .SH AUTHOR
 .LP
-Gavin J. Hurlbut (gjhurlbu@beirdo.ott.uplink.on.ca)
+Gavin J. Hurlbut (gjhurlbu@beirdo.ca)
 .SH PATCHES BY
 .PD 0
 .IP "12/31/95  Jeff Epler       (jepler@inetnebr.com)"
@@ -93,4 +93,5 @@ Gavin J. Hurlbut (gjhurlbu@beirdo.ott.uplink.on.ca)
 .IP "08/06/97  Steffen Ullrich  (ccrlphr@xensei.com)"
 .IP "08/27/97  Ian T Zimmerman  (itz@rahul.net)"
 .IP "09/10/97  Steffen Ullrich  (ccrlphr@xensei.com)"
+.IP "06/14/02  Ambrose Li       (acli@users.sourceforge.net)"
 

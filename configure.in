@@ -149,8 +149,28 @@ AC_TYPE_SIGNAL
 AC_CHECK_FUNCS(select socket strdup strstr)
 AC_CHECK_FUNCS(gethostbyaddr getservbyport getdomainname)
 
+AC_CHECK_FUNCS(inet_pton)
+if test $ac_cv_func_inet_pton = no; then
+  AC_CHECK_LIB(bind, inet_pton)
+  if test $ac_cv_lib_bind_inet_pton = no; then
+    AC_MSG_WARN([inet_pton not found. Do you have libbind.a?])
+    AC_CHECK_FUNCS(inet_aton)
+    if test $ac_cv_func_inet_aton = no; then
+      AC_CHECK_LIB(bind, inet_aton)
+      if test $ac_cv_func_inet_aton = no -a $ac_cv_lib_bind_inet_aton = no; then
+	AC_MSG_ERROR([No inet_pton, no inet_aton. Can't compile diald-top.])
+      fi
+    fi
+    AC_MSG_RESULT([ok, will use inet_aton instead])
+  else
+    AC_DEFINE(HAVE_INET_PTON,1)
+  fi
+else
+  AC_DEFINE(HAVE_INET_PTON,1)
+fi
+
 AC_MINGW32
 AC_EXEEXT
 AC_OBJEXT
 
-AC_OUTPUT(Makefile Makefile.def server/Makefile client/Makefile client/version.h)
+AC_OUTPUT(Makefile Makefile.def server/Makefile client/Makefile client/version.h diald-top.8)

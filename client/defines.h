@@ -2,8 +2,8 @@
  * $Id$
  *
  * DialD Packet Statistics Program
- * (c) 1995 Gavin J. Hurlbut
- * gjhurlbu@beirdo.ott.uplink.on.ca
+ * (c) 1995-2002 Gavin J. Hurlbut
+ * gjhurlbu@beirdo.ca
  *
  */
 

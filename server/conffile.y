@@ -31,7 +31,11 @@ ip:	_IP
 	{
 		struct in_addr addr;
 
+#if HAVE_INET_PTON
 		inet_pton( AF_INET, (char *)$1, &addr );
+#else
+		inet_aton( (char *)$1, &addr );
+#endif
 		lex_free( $1 );
 
 		$$ = addr.s_addr;

@@ -2,8 +2,8 @@
  * $Id$
  *
  * DialD Packet Statistics Program
- * (c) 1995 Gavin J. Hurlbut
- * gjhurlbu@beirdo.ott.uplink.on.ca
+ * (c) 1995-2002 Gavin J. Hurlbut
+ * gjhurlbu@beirdo.ca
  *
  */
 
@@ -57,6 +57,7 @@ const char     *service(int port, const char *proto);
  */
 void            close_screen(void);
 void            display_usage(int argc, char **argv);
+void		do_screen_resize(void);
 void            get_command(char *command);
 void            helpscreen(void);
 void            show_help_commands(void);

@@ -2,8 +2,8 @@
 #
 # Makefile for diald-top package
 # 
-# (c) 1995-97 Gavin J. Hurlbut
-# gjhurlbu@beirdo.uplink.on.ca
+# (c) 1995-2002 Gavin J. Hurlbut
+# gjhurlbu@beirdo.ca
 #
 
 include ../Makefile.def

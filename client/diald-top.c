@@ -3,8 +3,8 @@
  *
  * DialD Packet Statistics Program
  * Mainline
- * (c) 1995 Gavin J. Hurlbut
- * gjhurlbu@beirdo.ott.uplink.on.ca
+ * (c) 1995-2002 Gavin J. Hurlbut
+ * gjhurlbu@beirdo.ca
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -72,6 +72,15 @@ handlesig(int signum)
     exit(0);
 }
 
+#ifdef SIGWINCH
+static void
+handlesig_winch(int signum)
+{
+    resize_event_p = 1;
+    signal(SIGWINCH, handlesig_winch);
+}
+#endif
+
 int
 main(int argc, char **argv)
 {
@@ -109,6 +118,9 @@ main(int argc, char **argv)
     signal(SIGINT, handlesig);
     signal(SIGHUP, handlesig);
     signal(SIGPIPE, SIG_IGN);
+#ifdef SIGWINCH
+    signal(SIGWINCH, handlesig_winch);
+#endif
 
     while (!quit) {
 	fd_set          in,

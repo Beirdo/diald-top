@@ -2,8 +2,8 @@
 #
 # Makefile for diald-top package
 # 
-# (c) 1995-96 Gavin J. Hurlbut
-# gjhurlbu@beirdo.uplink.on.ca
+# (c) 1995-2002 Gavin J. Hurlbut
+# gjhurlbu@beirdo.ca
 #
 
 include Makefile.def
@@ -29,7 +29,7 @@ clean distclean squeakyclean::
 
 distclean::
 	-${RM} config.status config.log config.cache config.h
-	-${RM} Makefile Makefile.def
+	-${RM} Makefile Makefile.def diald-top.8
 
 install:	install-client install-server
 

@@ -3,8 +3,8 @@
  *
  * DialD Packet Statistics Program
  * Perform reverse DNS resolution on IPs
- * (c) 1995 Gavin J. Hurlbut
- * gjhurlbu@beirdo.ott.uplink.on.ca
+ * (c) 1995-2002 Gavin J. Hurlbut
+ * gjhurlbu@beirdo.ca
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -51,7 +51,13 @@ resolve(const char *aaddr)
     struct in_addr  addr;
     struct hostrec *hr = NULL;
 
-    if (!inet_pton(AF_INET, aaddr, &addr) || numeric)
+    if (!
+#if HAVE_INET_PTON
+       inet_pton(AF_INET, aaddr, &addr)
+#else
+       inet_aton(aaddr, &addr)
+#endif
+	  || numeric)
 	return aaddr;
 
     if (probetab(addr))

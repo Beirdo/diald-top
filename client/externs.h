@@ -2,8 +2,8 @@
  * $Id$
  *
  * DialD Packet Statistics Program
- * (c) 1995 Gavin J. Hurlbut
- * gjhurlbu@beirdo.ott.uplink.on.ca
+ * (c) 1995-2002 Gavin J. Hurlbut
+ * gjhurlbu@beirdo.ca
  *
  */
 
@@ -59,6 +59,7 @@ extern int      monitorfd;
 extern FILE    *fp_monitor;
 extern FILE    *input_file;
 
+extern int      cols;
 extern int      count;
 extern int      ip_width;
 extern int      numbuff;
@@ -67,6 +68,7 @@ extern int      queue;
 extern int      quit;
 extern int      quit_if_parse_error;
 extern int      remotemode;
+extern int      resize_event_p;
 extern int      state;
 extern int      trunc_local_hosts;
 extern int      rxload[3];

@@ -3,8 +3,8 @@
  *
  * DialD Packet Statistics Program
  * Monitor Pipe Handling
- * (c) 1995 Gavin J. Hurlbut
- * gjhurlbu@beirdo.ott.uplink.on.ca
+ * (c) 1995-2002 Gavin J. Hurlbut
+ * gjhurlbu@beirdo.ca
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -146,7 +146,13 @@ init_fifo(void)
 	struct sockaddr_in sa;
 	struct in_addr  remaddr;
 
-	if (!inet_pton(AF_INET, remoteip, &remaddr)) {
+	if (!
+#if HAVE_INET_PTON
+	inet_pton(AF_INET, remoteip, &remaddr)
+#else
+	inet_aton(remoteip, &remaddr)
+#endif
+	) {
 	    fprintf(stderr, "Invalid remote IP: %s\n", remoteip);
 	    exit(1);
 	}
@@ -270,15 +276,18 @@ read_fifo(void)
     /*
      * Redisplay the packet list 
      */
+    if (resize_event_p) {
+      do_screen_resize();
+      resize_event_p = 0;
+    }
     do_state(curr_state);
 
     werase(sub);
     if (count == 0) {
 	mvwprintw(sub, 0, 5, "No packets queued\n");
     } else {
-	wmove(sub, 0, 0);
 	for (i = 0; i < numbuff && i < count; i++) {
-	    wprintw(sub, "%s", scrbuff[i]);
+	    mvwprintw(sub, i, 0, "%s", scrbuff[i]);
 	}
     }
 

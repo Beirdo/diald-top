@@ -63,7 +63,11 @@ yy_log_input(char *buf, int *result, int max_size)
     }
 
     c = read(yyfd, buf, max_size);
-    yacc_block = 0;
+    if (c < 0) {	/* e.g., due to EINTR due to SIGWINCH) */
+	yacc_block = 1;
+    } else {
+	yacc_block = 0;
+    }
     fprintf(input_file, "%ld> %s", times(&_tms) - clock_start, buf);
     *result = (c > 0 ? c : YY_NULL);
 }
@@ -95,7 +99,11 @@ yy_nolog_input(char *buf, int *result, int max_size)
     }
 
     c = read(yyfd, buf, max_size);
-    yacc_block = 0;
+    if (c < 0) {	/* e.g., due to EINTR due to SIGWINCH) */
+	yacc_block = 1;
+    } else {
+	yacc_block = 0;
+    }
     *result = (c > 0 ? c : YY_NULL);
 }
 %}

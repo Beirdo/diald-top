@@ -3,8 +3,8 @@
  *
  * DialD Packet Statistics Program
  * Pipe contents Parser (for testing)
- * (c) 1995 Gavin J. Hurlbut
- * gjhurlbu@beirdo.ott.uplink.on.ca
+ * (c) 1995-2002 Gavin J. Hurlbut
+ * gjhurlbu@beirdo.ca
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -120,13 +120,15 @@ do_state(char *state)
 void
 do_message(char *message)
 {
+#define MESSAGE_PREFIX "Message:  "
+    int w = COLS - sizeof(MESSAGE_PREFIX) + 1;
 #ifdef TESTER
-    printf("Message:  %s\n", message);
+    printf(MESSAGE_PREFIX "%s\n", message);
 #else
     wmove(full, LINE_MESSAGE, 0);
     wclrtoeol(full);
 
-    mvwprintw(full, LINE_MESSAGE, 0, "Message:  %s", message);
+    mvwprintw(full, LINE_MESSAGE, 0, MESSAGE_PREFIX "%-*.*s", w, w, message);
 #endif
 }
 
@@ -167,11 +169,13 @@ do_packet(char *protocol, char *ip1, int port1, char *ip2, int port2,
                    *sourceports;
 
     if (count <= LINES - HEAD_LINES) {
+	static char buf[512];	/* XXX should be enough */
 	destports = (char *) service(port1, protocol);
 	sourceports = (char *) service(port2, protocol);
 
-	sprintf(scrbuff[count], format, protocol, resolve(ip1),
+	sprintf(buf, format, protocol, resolve(ip1),
 		destports, resolve(ip2), sourceports, ttl);
+	strncpy(scrbuff[count], buf, cols);
 	lex_free(sourceports);
 	lex_free(destports);
     }

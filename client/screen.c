@@ -3,8 +3,8 @@
  *
  * DialD Packet Statistics Program
  * Ncurses Screen Control
- * (c) 1995 Gavin J. Hurlbut
- * gjhurlbu@beirdo.ott.uplink.on.ca
+ * (c) 1995-2002 Gavin J. Hurlbut
+ * gjhurlbu@beirdo.ca
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -49,8 +49,10 @@ static char     rcsid[] =
 WINDOW         *full,
                *sub;
 char           *scrbuff[MAXBUFS];
+int		resize_event_p;
 int             numbuff;
 int             ip_width;
+int             cols;
 static char    *usagetext = "\n"
     "DialD Packet statistics program (c) 1995-2001 Gavin J. Hurlbut\n"
     "%s \thttp://diald-top.sourceforge.net/\n"
@@ -208,8 +210,7 @@ screen_init(void)
 {
     char           *fmt;
     int             spcs;
-    int             lines,
-                    cols;
+    int             lines;
 
     fmt = (char *) alloca(80);
 
@@ -223,8 +224,9 @@ screen_init(void)
 
     lines = LINES;
     cols = COLS;
-    for (numbuff = 0; numbuff <= lines; numbuff++) {
-	scrbuff[numbuff] = (char *) malloc(cols);
+    for (numbuff = 0; numbuff <= lines && numbuff < MAXBUFS; numbuff++) {
+	scrbuff[numbuff] = (char *) malloc(cols + 1);
+	scrbuff[numbuff][0] = '\0';
     }
 
     strcpy(curr_state, "");
@@ -251,6 +253,33 @@ screen_init(void)
     mvwprintw(full, LINE_UNDERLINE, 0, "%s", strrpt('=', COLS - 1));
 
     update_screen();
+}
+
+void
+do_screen_resize( void )
+{
+    if (sub) {
+	delwin(sub);
+	sub = NULL;
+    }
+    if (full) {
+	delwin(full);
+	full = NULL;
+    }
+    endwin();
+
+    for (; numbuff >= 0; numbuff--) {
+	if (scrbuff[numbuff]) {
+	    free(scrbuff[numbuff]);
+	}
+	scrbuff[numbuff] = NULL;
+    }
+    numbuff = 0;
+
+    initscr();
+    refresh();
+
+    screen_init();
 }
 
 char           *
