@@ -6,14 +6,12 @@
 # gjhurlbu@beirdo.uplink.on.ca
 #
 
-
 # Installation directories
-
 prefix = @prefix@
 exec_prefix = @exec_prefix@
-CLIENT_INSTALL_DIR = @bindir@
-SERVER_INSTALL_DIR = @bindir@
-MAN_DIR = @mandir@/man8
+CLIENT_INSTALL_DIR = ${RPM_ROOT}@bindir@
+SERVER_INSTALL_DIR = ${RPM_ROOT}@bindir@
+MAN_DIR = ${RPM_ROOT}@mandir@/man8
 CONF_DIR = @sysconfdir@
 RUN_DIR = @localstatedir@/run
 
