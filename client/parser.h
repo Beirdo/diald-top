@@ -1,17 +1,24 @@
-void do_status( int up, int force, int im, int im_itm, int im_tm, int im_fuzz, 
-	char *im_to, char *force_to, char *to );
+#ifndef _parser_h
+#define _parser_h
 
-void do_load( int itxtotal, int irxtotal );
+void            do_status(int up, int force, int im, int im_itm, int im_tm,
+			  int im_fuzz, char *im_to, char *force_to,
+			  char *to);
 
-void do_interface( char *interface, char *local_ip, char *remote_ip );
+void            do_load(int itxtotal, int irxtotal);
 
-void do_state( char *state );
+void            do_interface(char *interface, char *local_ip,
+			     char *remote_ip);
 
-void do_message( char *message );
+void            do_state(char *state);
 
-void do_endqueue();
+void            do_message(char *message);
 
-void do_queue();
+void            do_endqueue();
 
-void do_packet( char *protocol, char *ip1, int port1, char *ip2, int port2,
-	char *ttl );
+void            do_queue();
+
+void            do_packet(char *protocol, char *ip1, int port1, char *ip2,
+			  int port2, char *ttl);
+
+#endif

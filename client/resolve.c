@@ -2,43 +2,32 @@
  * $Id$
  *
  * DialD Packet Statistics Program
+ * Perform reverse DNS resolution on IPs
  * (c) 1995 Gavin J. Hurlbut
- * gjhurlbu@beirdo.uplink.on.ca
+ * gjhurlbu@beirdo.ott.uplink.on.ca
  *
- * $Log$
- * Revision 1.1.1.1  2000/06/11 05:57:09  gjhurlbu
- * Initial check-in from diald-top v2.0
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
  *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * Revision 2.0  1997/09/28 21:21:15  gjhurlbu
- * Release 2.0
- *
- * Revision 1.6  1997/09/25 06:45:23  gjhurlbu
- * Tidied the client code some
- * Converted some static buffers to dynamically created ones
- *
- * Revision 1.5  1997/09/21 06:00:57  gjhurlbu
- * Fixed the segfault stupidity
- *
- * Revision 1.4  1997/08/30 19:54:16  gjhurlbu
- * Incorporated many patches
- * Fixed redraw
- *
- * Revision 1.3  1997/03/29 17:34:38  gjhurlbu
- * Added RCS IDs to all C files
- * Removed some excess comments
- *
- * Revision 1.2  1996/07/27 21:09:27  gjhurlbu
- * *** empty log message ***
- *
- * Revision 1.1  1996/07/27 20:07:24  gjhurlbu
- * Splitting into separate modules
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
 
-static char rcsid[] = "$Id$";
+static char     rcsid[] =
+    "$Id$";
 
-/* Included Header Files */
+/*
+ * Included Header Files 
+ */
 #include <stdio.h>
 #include <string.h>
 #include <netdb.h>
@@ -55,158 +44,169 @@ static char rcsid[] = "$Id$";
 
 struct hostrec *hosthash[HASHSIZE];
 
-const char *resolve( const char *aaddr )
+const char     *
+resolve(const char *aaddr)
 {
-	struct in_addr addr;
-	struct hostrec *hr = NULL;
+    struct in_addr  addr;
+    struct hostrec *hr = NULL;
 
-	if( !inet_aton( aaddr, &addr ) || numeric)
-		return aaddr;
+    if (!inet_aton(aaddr, &addr) || numeric)
+	return aaddr;
 
-	if( probetab(addr) )	hr = gettab(addr);
+    if (probetab(addr))
+	hr = gettab(addr);
 
-	if( (!hr || now-hr->time_resolved > HOSTREC_EXPIRE) &&
-           !strcmp(curr_state,"UP") &&
-           rxload[0]+rxload[1]+rxload[2] < MAX_QUERY_LOAD && 
-           txload[0]+txload[1]+rxload[2] < MAX_QUERY_LOAD ) {
-		struct hostent *host;
+    if ((!hr || now - hr->time_resolved > HOSTREC_EXPIRE) &&
+	!strcmp(curr_state, "UP") &&
+	rxload[0] + rxload[1] + rxload[2] < MAX_QUERY_LOAD &&
+	txload[0] + txload[1] + rxload[2] < MAX_QUERY_LOAD) {
+	struct hostent *host;
 
-		host = gethostbyaddr( (char*)&addr, sizeof(addr), AF_INET );
-		if( !host ) {
-			if( h_errno == HOST_NOT_FOUND ||
-			    h_errno == NO_ADDRESS ) {
-				if (!hr) hr = gettab(addr);
-                                else {
-                                        free(hr->name);
-                                        free(hr->trunc);
-                                }
-				hr->name  = strdup(aaddr);
-				hr->trunc = strdup(aaddr);
-				hr->addr  = addr;
-                                hr->time_resolved = now;
-			}
-			return aaddr;
+	host = gethostbyaddr((char *) &addr, sizeof(addr), AF_INET);
+	if (!host) {
+	    if (h_errno == HOST_NOT_FOUND || h_errno == NO_ADDRESS) {
+		if (!hr)
+		    hr = gettab(addr);
+		else {
+		    free(hr->name);
+		    free(hr->trunc);
 		}
-
-                if (!hr) hr = gettab(addr);
-                else {
-                        free(hr->name);
-                        free(hr->trunc);
-                }
-		hr->name  = strdup(host->h_name);
-		hr->trunc = strdup(host->h_name);
-		hr->addr  = addr;
-                hr->time_resolved = now;
-		truncate_hostname(hr->trunc);
+		hr->name = strdup(aaddr);
+		hr->trunc = strdup(aaddr);
+		hr->addr = addr;
+		hr->time_resolved = now;
+	    }
+	    return aaddr;
 	}
 
-	if( !hr ) return aaddr;
-
-	if( trunc_local_hosts )	return( hr->trunc );
-	else			return( hr->name );
-}
-
-
-int hash( struct in_addr addr )
-{
-	unsigned char *c = (unsigned char*)&addr;
-
-	return( (c[0]^c[2]) + ( (c[1]^c[3]) << 8 ) );
-}
-
-
-struct hostrec *gettab( struct in_addr addr )
-{
-	int h = hash(addr);
-	struct hostrec *hr = hosthash[h];
-
-	while( hr ) {
-		if( !memcmp( &addr, &(hr->addr), sizeof(struct in_addr) ) )
-			return( hr );
-
-		hr=hr->next;
+	if (!hr)
+	    hr = gettab(addr);
+	else {
+	    free(hr->name);
+	    free(hr->trunc);
 	}
+	hr->name = strdup(host->h_name);
+	hr->trunc = strdup(host->h_name);
+	hr->addr = addr;
+	hr->time_resolved = now;
+	truncate_hostname(hr->trunc);
+    }
 
-	hr = (struct hostrec *)malloc(sizeof(struct hostrec));
-	hr->next = hosthash[h];
-	hosthash[h] = hr;
-	return( hr );
-}
-		
+    if (!hr)
+	return aaddr;
 
-int probetab( struct in_addr addr )
-{
-	struct hostrec *hr = hosthash[hash(addr)];
-
-	while( hr ) {
-		if( !memcmp( &addr, &(hr->addr), sizeof(struct in_addr) ) )
-			return( 1 );
-
-		hr = hr->next;
-	}
-	return( 0 );
+    if (trunc_local_hosts)
+	return (hr->trunc);
+    else
+	return (hr->name);
 }
 
-
-void truncate_hostname( char *hostname )
+int
+hash(struct in_addr addr)
 {
-	static char mydomain[256];
-	char *ptr;      
+    unsigned char  *c = (unsigned char *) &addr;
 
-	if( mydomain[0] == '\0' ) {
-		getdomainname( mydomain, 256 );
-	}
-
-	if( (ptr = strstr( hostname, mydomain )) && (ptr > hostname) ) {
-		ptr[-1] = '\0';
-	}
+    return ((c[0] ^ c[2]) + ((c[1] ^ c[3]) << 8));
 }
 
-
-const char *service( int port, const char *proto )
+struct hostrec *
+gettab(struct in_addr addr)
 {
-	char *sstr;
-        struct servent *serv;
-        static int first_time = 1;
+    int             h = hash(addr);
+    struct hostrec *hr = hosthash[h];
 
-	if (first_time) {
-		first_time = 0;
-		setservent( 1 );
-        }
-	
-	serv = getservbyport( htons(port), proto );
+    while (hr) {
+	if (!memcmp(&addr, &(hr->addr), sizeof(struct in_addr)))
+	    return (hr);
+
+	hr = hr->next;
+    }
+
+    hr = (struct hostrec *) malloc(sizeof(struct hostrec));
+    hr->next = hosthash[h];
+    hosthash[h] = hr;
+    return (hr);
+}
+
+int
+probetab(struct in_addr addr)
+{
+    struct hostrec *hr = hosthash[hash(addr)];
+
+    while (hr) {
+	if (!memcmp(&addr, &(hr->addr), sizeof(struct in_addr)))
+	    return (1);
+
+	hr = hr->next;
+    }
+    return (0);
+}
+
+void
+truncate_hostname(char *hostname)
+{
+    static char     mydomain[256];
+    char           *ptr;
+
+    if (mydomain[0] == '\0') {
+	getdomainname(mydomain, 256);
+    }
+
+    if ((ptr = strstr(hostname, mydomain)) && (ptr > hostname)) {
+	ptr[-1] = '\0';
+    }
+}
+
+const char     *
+service(int port, const char *proto)
+{
+    char           *sstr;
+    struct servent *serv;
+    static int      first_time = 1;
+
+    if (first_time) {
+	first_time = 0;
+	setservent(1);
+    }
+
+    serv = getservbyport(htons(port), proto);
 
 #ifdef USE_OBSTACKS
 
-	if( !serv ) {
-		sstr = obstack_alloc( &the_obstack, 6 );
-		snprintf( sstr, 6, "%-5d", port );
-	} else {
-		/* do it by hand to save a scan by strlen */
-		register char * p = serv->s_name;
+    if (!serv) {
+	sstr = obstack_alloc(&the_obstack, 6);
+	snprintf(sstr, 6, "%-5d", port);
+    } else {
+	/*
+	 * do it by hand to save a scan by strlen 
+	 */
+	register char  *p = serv->s_name;
 
-		while( *p ) {
-			obstack_1grow( &the_obstack, *p );
-			p++;
-		}
-
-		obstack_1grow( &the_obstack, 0 );
-		sstr = obstack_finish( &the_obstack );
-        }
-
-#else  /* !USE_OBSTACKS */
-
-	if( !serv ) {
-		sstr = (char *)malloc(6);
-		if( sstr ) {
-			snprintf( sstr, 6, "%-5d", port );
-		}
-	} else {
-		sstr = strdup( serv->s_name );
+	while (*p) {
+	    obstack_1grow(&the_obstack, *p);
+	    p++;
 	}
 
-#endif /* USE_OBSTACKS */
+	obstack_1grow(&the_obstack, 0);
+	sstr = obstack_finish(&the_obstack);
+    }
 
-	return( sstr ? sstr : yynullstr );
+#else				/*
+				 * !USE_OBSTACKS 
+				 */
+
+    if (!serv) {
+	sstr = (char *) malloc(6);
+	if (sstr) {
+	    snprintf(sstr, 6, "%-5d", port);
+	}
+    } else {
+	sstr = strdup(serv->s_name);
+    }
+
+#endif				/*
+				 * USE_OBSTACKS 
+				 */
+
+    return (sstr ? sstr : yynullstr);
 }
-	

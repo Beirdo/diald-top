@@ -8,10 +8,10 @@
 
 #include "y.tab.h"
 
-YYSTYPE lex_string( void );
+YYSTYPE         lex_string(void);
 
-char yynullstr[] = "";
-int yacc_eof;
+char            yynullstr[] = "";
+int             yacc_eof;
 %}
 
 USERID	[a-zA-z][a-zA-z0-9]*
@@ -29,17 +29,19 @@ COMMENT	\#.*$
 <<EOF>>		yacc_eof = 1; yyterminate();
 
 %%
-static char rcsid[] = "$Id$";
+static char     rcsid[] =
+    "$Id$";
 
-YYSTYPE lex_string( void )
+YYSTYPE
+lex_string(void)
 {
-	char *str;
+    char           *str;
 
-	str = (char *)malloc( yyleng + 1 );
-	if( !str )	return( (YYSTYPE)(&yynullstr[0]) );
-	memcpy( str, yytext, yyleng );
-	str[yyleng] = '\0';
-	
-	return( (YYSTYPE)str );
+    str = (char *) malloc(yyleng + 1);
+    if (!str)
+	return ((YYSTYPE) (&yynullstr[0]));
+    memcpy(str, yytext, yyleng);
+    str[yyleng] = '\0';
+
+    return ((YYSTYPE) str);
 }
-

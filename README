@@ -6,18 +6,48 @@ All comments, bug reports would be appreciated.
 
 License Crap:
 =============
-
-	As far as I am concerned, if you want to hack on this, you are free
-to so at your pleasure.  It took me a total of about 5 hours or so to get it to 
-where it is now...  The only thing I ask is that if you hack on it and get
-something useful, please send me a diff (context diff would be best) of 
-what you have changed so I can incorporate it in the master version.  Oh, and
-tell me what revision number your baseline version was (defined as rev at the
-top of diald-top.c).
+	This project is licensed under the terms of the GNU Public License,
+version 2.  For more details (as in the actual license agreement), please read
+the COPYING file in this directory.
 
 
-Intallation:
+SourceForge:
 ============
+	Diald-top now lives on sourceforge.net.  There is a web page for the
+project at:	http://diald-top.sourceforge.net/
+
+	The project's development page can be found at:
+		http://www.sourceforge.net/projects/diald-top/
+
+	On the development page, there is access to bug tracking, technical
+support, public surveys, our CVS Repository, and also a patch submission area.
+This should be the primary point of contact for diald-top's development team.
+If you have found a bug, have a feature request, or have a patch to contribute,
+please visit the development page to do so.
+
+	There is a public survey on the development page that all users are
+requested to participate in.  This survey is to find out what Linux kernel (or
+other OS), libc version and diald version that diald-top is being used with.
+This in part will be used to determine the level of support to maintain for
+differing setups.
+
+	There are also two mailing lists for diald-top.  One is for the users,
+and one is for the developers (although these aren't mutually exclusive).  They
+can be found by visiting the project development page.  All users would be
+advised to join the diald-top-users list to keep on top of other users'
+problems, and the fixes for them :)  Mailing list archives are maintained on
+geocrawler.com (which is also linked off the development page), and it would
+be a good idea to visit the archives.
+
+	New developers are always welcome.  If you wish to actively develop
+diald-top, please contact a project admin (once again, using the development
+page).
+
+	Sourceforge rules.
+
+
+Installation:
+=============
 
 Read the INSTALL file for instructions on how to install diald-top.
 

@@ -7,15 +7,14 @@
 
 #include "protos.h"
 
-extern int yylex( void );
+extern int      yylex(void);
 
-#define YYERROR_VERBOSE 
+#define YYERROR_VERBOSE
 
 #define lex_free(x) \
 	if(x != 0) free( (void *)(x) );
 
 #define YYSTYPE unsigned long int
-
 %}
 
 %token _USERID
@@ -56,11 +55,13 @@ newline: _USERID ip ip _NEWLINE
 
 %%
 
-static char rcsid[] = "$Id$";
+static char     rcsid[] =
+    "$Id$";
 
-int yyerror( char *string )
+int
+yyerror(char *string)
 {
-	fprintf( stderr, "%s\n", string );
-        fprintf( stderr, "lookahead symbol = %d\n", yychar);
-        exit(1);
+    fprintf(stderr, "%s\n", string);
+    fprintf(stderr, "lookahead symbol = %d\n", yychar);
+    exit(1);
 }

@@ -10,19 +10,17 @@
 #include <unistd.h>
 
 typedef struct {
-	int	fullcount;
-	fd_set	full;
-	int	maxfd;
-	int	selcount;
-	fd_set	sel;
+    int             fullcount;
+    fd_set          full;
+    int             maxfd;
+    int             selcount;
+    fd_set          sel;
 } thread_fds_t;
 
-
 typedef struct {
-	thread_fds_t	*pd;
-	thread_fds_t	*ps;
-	thread_fds_t	*fs;
+    thread_fds_t   *pd;
+    thread_fds_t   *ps;
+    thread_fds_t   *fs;
 } fds_t;
-
 
 #endif

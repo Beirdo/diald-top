@@ -3,14 +3,13 @@
 #include "parser.h"
 #include "externs.h"
 
-int yacc_key;
-int quit_if_parse_error;
+int             yacc_key;
+int             quit_if_parse_error;
 
-extern int yylex( void );
-extern int lex_testkey( void );
+extern int      yylex(void);
+extern int      lex_testkey(void);
 
-#define YYERROR_VERBOSE 
-
+#define YYERROR_VERBOSE
 %}
 
 %token _STATE
@@ -179,13 +178,16 @@ packet: string ip port ip port time
 	| _WOULDBLOCK
 %%
 
-static char rcsid[] = "$Id$";
+static char     rcsid[] =
+    "$Id$";
 
-int yyerror( char *string )
+int
+yyerror(char *string)
 {
-	if( yychar == _WOULDBLOCK )  return( 0 );
-	fprintf( stderr, "%s\n", string );
-        fprintf( stderr, "lookahead symbol = %d\n", yychar);
-        if (quit_if_parse_error)	exit(1);
+    if (yychar == _WOULDBLOCK)
+	return (0);
+    fprintf(stderr, "%s\n", string);
+    fprintf(stderr, "lookahead symbol = %d\n", yychar);
+    if (quit_if_parse_error)
+	exit(1);
 }
-

@@ -7,8 +7,9 @@
 
 #include <syslog.h>
 
-
-/* #define LOGOPTIONS	(LOG_PERROR | LOG_PID) */
+/*
+ * #define LOGOPTIONS   (LOG_PERROR | LOG_PID) 
+ */
 #define LOGOPTIONS	LOG_PID
 #define LOGFACILITY	LOG_LOCAL5
 
