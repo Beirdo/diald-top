@@ -108,6 +108,7 @@ GJH_REQUIRE_PROG($YACC, bison -y)
 AC_LANG(C)
 AC_C_CONST
 
+ACX_PTHREAD()
 
 dnl Check for obstacks
 GJH_ARG_DISABLE(obstack, [if obstack support is configured to be enabled],
@@ -160,6 +161,7 @@ AC_CHECK_HEADERS([sys/time.h syslog.h unistd.h stddef.h])
 dnl Checks for libraries.
 dnl AC_CHECK_LIB(fl, main)
 AC_CHECK_LIB(ncurses, printw)
+
 
 # Extra libraries on some systems
 case "${host}" in
