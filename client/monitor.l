@@ -24,7 +24,7 @@ int yacc_eof;
 int yacc_block;
 extern int errno;
 
-FILE *input_file = stderr;
+FILE *input_file;
 void (*yy_input_func)(char*,int*,int) = yy_nolog_input;
 
 #define YY_INPUT(buf,result,max_size) yy_input_func(buf,&result,max_size)

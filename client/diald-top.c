@@ -6,6 +6,10 @@
  * gjhurlbu@beirdo.uplink.on.ca
  *
  * $Log$
+ * Revision 1.1.1.1  2000/06/11 05:57:08  gjhurlbu
+ * Initial check-in from diald-top v2.0
+ *
+ *
  * Revision 2.0  1997/09/28 21:21:07  gjhurlbu
  * Release 2.0
  *
@@ -213,6 +217,7 @@ int read_command_line(int argc, char **argv)
 	extern char *optarg;
 	int opt;
 
+	input_file = stderr;
 	monitor = strdup( tmpnam(NULL) );
 	control = strdup( CONTROL_FIFO );
 
