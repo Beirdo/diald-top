@@ -131,6 +131,7 @@ blurb:	status num num num num num num time time time
 	;
 
 status:	_STATUS _NEWLINE
+	| queue _STATUS _NEWLINE
 	;
 
 load:	_LOAD  _NEWLINE
@@ -181,6 +182,7 @@ packet: string ip port ip port time
 		lex_free( $2 );
 	}
 	| _WOULDBLOCK
+	;
 %%
 
 static char     rcsid[] =
