@@ -8,22 +8,26 @@
 
 include ../Makefile.def
 
+PROJDIR = @top_srcdir@
 OBJS = diald-top.o pipe.o resolve.o screen.o lex.yy.o y.tab.o parser.o 
-DESTBINS = ${CLIENTBINS:%=../%}
+DESTBINS = ${CLIENTBINS:%=${PROJDIR}/%}
 
-../% : %
-	${CP} ${@F} $@
+${PROJDIR}/% : %
+	${INSTALL} ${@F} $@
 
 all:	${DESTBINS}
 
 diald-top:	${OBJS}
 	${CC} $(LDFLAGS) -o $@ $+ ${CLIENTLIB}
 
-distclean clean:
+clean:
 	-${RM} ${OBJS} ${CLIENTBINS} tester core
 
 squeakyclean:	clean
 	-${RM} y.tab.c y.tab.h y.output lex.yy.c
+
+distclean:	squeakyclean
+	-${RM} Makefile version.h
 
 install:
 	${MAKE} -C .. install-client
@@ -45,6 +49,6 @@ tparser.o:	parser.c
 	${CC} ${CFLAGS} ${CLIENTINCLUDES} ${CLIENTDEFINES} -DTESTER -c $< -o $@
 
 
-.c.o:
+.c.@OBJEXT@:
 	${CC} ${CFLAGS} ${CLIENTINCLUDES} ${CLIENTDEFINES} -c $< -o $@
 

@@ -25,6 +25,7 @@
 #include <limits.h>
 #include <syslog.h>
 
+#include "config.h"
 #include "fds.h"
 #include "ports.h"
 #include "protos.h"

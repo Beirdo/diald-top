@@ -9,7 +9,9 @@ int             quit_if_parse_error;
 extern int      yylex(void);
 extern int      lex_testkey(void);
 
+#if YYDEBUG == 1
 #define YYERROR_VERBOSE
+#endif /* YYDEBUG */
 %}
 
 %token _STATE

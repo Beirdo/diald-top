@@ -5,6 +5,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
+#include "config.h"
 #include "protos.h"
 
 extern int      yylex(void);

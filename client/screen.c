@@ -28,12 +28,6 @@ static char     rcsid[] =
 /*
  * Included Header Files 
  */
-#ifndef CURSHEAD
-#include <ncurses.h>
-#else
-#include CURSHEAD
-#endif
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -63,15 +57,26 @@ static char    *usagetext = "\n"
     "\n"
     "Proper usage:\n"
     "\n"
-    "\t%s [-n] [-l] [-q] [-c control_FIFO] [-r address] [-L logfile]\n"
+    "\t%s "
+#ifdef HAVE_GETHOSTBYADDR
+    "[-n] "
+#ifdef HAVE_GETDOMAINNAME
+    "[-l] "
+#endif /* HAVE_GETDOMAINNAME */
+#endif /* HAVE_GETHOSTBYADDR */
+    "[-q] [-c control_FIFO] [-r address] [-L logfile]\n"
     "\n"
+#ifdef HAVE_GETHOSTBYADDR
     "If the -n option is used, the IP addresses will not be resolved\n"
     "  otherwise, all IP addresses will be resolved (when the link is up)\n"
     "\n"
+#ifdef HAVE_GETHOSTNAME
     "If the -l option is used, any hosts in the local domain will have\n"
     "  the domain name stripped off, otherwise, the domain name will be\n"
     "  included.\n"
     "\n"
+#endif /* HAVE_GETDOMAINNAME */
+#endif /* HAVE_GETHOSTBYADDR */
     "If the -q option is used, diald-top will quit on a parse error\n"
     "\n"
     "The -c option is optional.  If it is not included, the control FIFO\n"
@@ -85,7 +90,8 @@ static char    *usagetext = "\n"
     "The -L option creates a log file with all monitor FIFO input logged with "
     "a\n"
     "  timestamp to aid in debugging.  This is likely to create a very large "
-    "file\n" "  if left running!\n" "\n";
+    "file\n" 
+    "  if left running!\n" "\n";
 
 void
 get_command(char *command)
@@ -126,9 +132,13 @@ helpscreen(void)
     }
 
     print_help(0, "(h)\tDisplay Help Screen (this screen)");
+#ifdef HAVE_GETHOSTBYADDR
+#ifdef HAVE_GETDOMAINNAME
     print_help(0,
 	       "(l)\tToggle Truncation of Local Hosts (removes domain)");
+#endif /* HAVE_GETDOMAINNAME */
     print_help(0, "(n)\tToggle Numeric IP vs. Resolved Names");
+#endif /* HAVE_GETHOSTBYADDR */
     print_help(0, "(q)\tQuit diald-top");
     print_help(0, "(^R)\tRedraw screen");
 
@@ -288,6 +298,7 @@ parse_keyboard(void)
     key = getch();
 
     switch (key) {
+#if YYDEBUG == 1
     case 'd':
 	yydebug = !yydebug;
 	mvwprintw(full, LINE_COMMAND, 0, "Debug mode is %s",
@@ -299,6 +310,7 @@ parse_keyboard(void)
 	wclrtoeol(full);
 	update_screen();
 	break;
+#endif /* YYDEBUG */
 
     case 'q':
 	quit = 1;
@@ -319,13 +331,17 @@ parse_keyboard(void)
 	update_screen();
 	break;
 
+#ifdef HAVE_GETHOSTBYADDR
     case 'n':
 	numeric = 1 - numeric;
 	break;
 
+#ifdef HAVE_GETDOMAINNAME
     case 'l':
 	trunc_local_hosts = 1 - trunc_local_hosts;
 	break;
+#endif /* HAVE_GETDOMAINNAME */
+#endif /* HAVE_GETHOSTBYADDR */
 
     case 18:			/*
 				 * ^R 

@@ -28,16 +28,6 @@ static char     rcsid[] =
 /*
  * Included Header Files 
  */
-#ifndef CURSHEAD
-#include <ncurses.h>
-#else				/*
-				 * def(CURSHEAD) 
-				 */
-#include CURSHEAD
-#endif				/*
-				 * CURSHEAD 
-				 */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -67,12 +57,12 @@ char           *revision;
 char           *remoteip;
 char           *curr_state;
 
-#ifdef USE_OBSTACKS
+#ifdef HAVE_OBSTACK
 struct obstack  the_obstack;
 #define obstack_chunk_alloc malloc
 #define obstack_chunk_free free
 #endif				/*
-				 * USE_OBSTACKS 
+				 * HAVE_OBSTACK
 				 */
 
 static void
@@ -92,10 +82,10 @@ main(int argc, char **argv)
     fd_set          fd_ctl;
     int             fd_yyin;
 
-#ifdef USE_OBSTACKS
+#ifdef HAVE_OBSTACK
     obstack_init(&the_obstack);
 #endif				/*
-				 * USE_OBSTACKS 
+				 * HAVE_OBSTACK
 				 */
 
     revision = &rev[0];
@@ -158,7 +148,11 @@ read_command_line(int argc, char **argv)
     monitor = strdup(tmpnam(NULL));
     control = strdup(CONTROL_FIFO);
 
+#ifdef HAVE_GETHOSTBYADDR
     numeric = 0;
+#else
+    numeric = 1;
+#endif
     remotemode = 0;
 
     while ((opt = getopt(argc, argv, "qlnhc:m:t:r:L:d")) != -1) {
@@ -167,13 +161,23 @@ read_command_line(int argc, char **argv)
 	    quit_if_parse_error = 1;
 	    break;
 
+#if YYDEBUG == 1
 	case 'd':
 	    yydebug = 1;
 	    break;
+#endif /* YYDEBUG */
 
+#ifdef HAVE_GETHOSTBYADDR
 	case 'n':
 	    numeric = 1;
 	    break;
+
+#ifdef HAVE_GETDOMAINNAME
+	case 'l':
+	    trunc_local_hosts = 1;
+	    break;
+#endif /* HAVE_GETDOMAINNAME */
+#endif /* HAVE_GETHOSTBYADDR */
 
 	case 'c':
 	    free(control);
@@ -193,10 +197,7 @@ read_command_line(int argc, char **argv)
 	    yy_input_func = yy_log_input;
 	    break;
 
-	case 'l':
-	    trunc_local_hosts = 1;
-	    break;
-
+	default:
 	case ':':
 	case '?':
 	case 'h':

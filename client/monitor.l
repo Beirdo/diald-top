@@ -11,6 +11,7 @@
 #include <unistd.h>
 
 #include "y.tab.h"
+#include "defines.h"
 #include "externs.h"
 #include "prototypes.h"
 
@@ -147,7 +148,7 @@ lex_string(void)
 {
     char           *str;
 
-#ifndef USE_OBSTACKS
+#ifndef HAVE_OBSTACK
     str = (char *) malloc(yyleng + 1);
     if (!str)
 	return ((YYSTYPE) (&yynullstr[0]));

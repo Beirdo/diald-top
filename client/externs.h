@@ -10,24 +10,26 @@
 #ifndef _externs_h
 #define _externs_h
 
+#include "defines.h"
+
 /*
  * Included Header Files 
  */
-#include <stdio.h>
 
-#ifndef CURSHEAD
+#ifdef HAVE_NCURSES_H
 #include <ncurses.h>
 #else
-#include CURSHEAD
+#undef NDEBUG
+#error ACK!  We need ncurses.h to compile!
 #endif
 
-#ifdef USE_OBSTACKS
+#ifdef HAVE_OBSTACK
 #include <obstack.h>
 extern struct obstack the_obstack;
 #define lex_free(s) ((char*)(s) == yynullstr ? (void)0 : \
                      (obstack_free(&the_obstack, (char*)(s))))
 #else				/*
-				 * !USE_OBSTACKS 
+				 * !HAVE_OBSTACK
 				 */
 #include <stdlib.h>
 #define lex_free(s) ((char*)(s) == yynullstr ? (void)0 : \
@@ -36,10 +38,10 @@ extern struct obstack the_obstack;
 				 * USE_OBSTACKS 
 				 */
 
+#include <stdio.h>
 #include <sys/types.h>
 #include <time.h>
 
-#include "defines.h"
 #include "hostrec.h"
 
 /*

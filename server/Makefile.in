@@ -8,12 +8,13 @@
 
 include ../Makefile.def
 
+PROJDIR = @top_srcdir@
 OBJS = diald-top-server.o port-daemon.o port-queue.o fifo-server.o lex.yy.o \
 	y.tab.o authenticate.o selection.o
-DESTBINS = ${SERVERBINS:%=../%}
+DESTBINS = ${SERVERBINS:%=${PROJDIR}/%}
 
-../% : %
-	${CP} ${@F} $@
+${PROJDIR}/% : %
+	${INSTALL} ${@F} $@
 
 all:	${DESTBINS}
 
@@ -30,17 +31,20 @@ y.tab.h y.tab.c:	conffile.y
 	${YACC} $<
 
 
-distclean clean:
+clean:
 	-${RM} ${OBJS} ${SERVERBINS} core
 
 
 squeakyclean:	clean
 	-${RM} y.tab.c y.tab.h y.output lex.yy.c
+
+distclean:	squeakyclean
+	-${RM} Makefile
 	
 install:
 	${MAKE} -C .. install-server
 	
 
-.c.o:
+.c.@OBJEXT@:
 	${CC} ${CFLAGS} ${SERVERINCLUDES} ${SERVERDEFINES} -c $< -o $@
 

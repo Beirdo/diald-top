@@ -27,6 +27,7 @@
 #include <syslog.h>
 #include <errno.h>
 
+#include "config.h"
 #include "fds.h"
 #include "ports.h"
 #include "protos.h"

@@ -11,6 +11,7 @@ include Makefile.def
 # Default is to make all
 all::
 
+PROJDIR = @top_srcdir@
 DIRS = client server
 
 all clean distclean squeakyclean::
@@ -21,11 +22,12 @@ all clean distclean squeakyclean::
 ${DIRS}:
 	${MAKE} -C $@
 
-clean squeakyclean::
+clean distclean squeakyclean::
 	-${RM} diald-top diald-top-server core
 
 distclean::
 	-${RM} config.status config.log config.cache config.h
+	-${RM} Makefile Makefile.def
 
 install:	install-client install-server
 

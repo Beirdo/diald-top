@@ -25,6 +25,7 @@
 #include <arpa/inet.h>
 #include <malloc.h>
 
+#include "config.h"
 #include "protos.h"
 #include "loglevels.h"
 #include "ports.h"

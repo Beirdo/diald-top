@@ -21,6 +21,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include "config.h"
 #include "fds.h"
 #include "protos.h"
 

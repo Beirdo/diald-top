@@ -6,6 +6,7 @@
 
 #define YYSTYPE unsigned long int
 
+#include "config.h"
 #include "y.tab.h"
 
 YYSTYPE         lex_string(void);

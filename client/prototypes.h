@@ -41,12 +41,16 @@ void            validate_command(char *command);
 /*
  * resolve.c 
  */
+#ifdef HAVE_GETHOSTBYADDR
 struct hostrec *gettab(struct in_addr addr);
 int             hash(struct in_addr addr);
 int             probetab(struct in_addr addr);
+#ifdef HAVE_GETDOMAINNAME
+void            truncate_hostname(char *hostname);
+#endif /* HAVE_GETDOMAINNAME */
+#endif /* HAVE_GETHOSTBYADDR */
 const char     *resolve(const char *aaddr);
 const char     *service(int port, const char *proto);
-void            truncate_hostname(char *hostname);
 
 /*
  * screen.c 

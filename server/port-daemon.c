@@ -29,6 +29,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 
+#include "config.h"
 #include "fds.h"
 #include "ports.h"
 #include "protos.h"

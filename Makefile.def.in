@@ -1,0 +1,74 @@
+# $Id$
+#
+# Makefile for diald-top package
+# 
+# (c) 1995-97 Gavin J. Hurlbut
+# gjhurlbu@beirdo.uplink.on.ca
+#
+
+
+# Installation directories
+
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+CLIENT_INSTALL_DIR = @bindir@
+SERVER_INSTALL_DIR = @bindir@
+MAN_DIR = @mandir@/man8
+CONF_DIR = @sysconfdir@
+RUN_DIR = @localstatedir@/run
+
+# The OWNER, GROUP and MODE settings are not as obvious as they may appear.
+#  Please read the INSTALL file to find out what these should be
+
+OWNER = root
+GROUP = root
+CLIENTMODE = 500
+SERVERMODE = 500
+
+
+# Build Tools
+CC = @CC@
+LEX = @LEX@ -CFe	# NOTE: *MUST* be flex
+YACC = @YACC@ -dv	# NOTE: *MUST* be bison
+INSTALL = @INSTALL@
+
+ifeq (${DEBUG},1)
+   # Debug version
+   CFLAGS = @CFLAGS@ -g
+   LDFLAGS = @LDFLAGS@
+   INSTALLFLAGS =
+else
+   # Non-debug version
+   CFLAGS = @CFLAGS@
+   LDFLAGS = @LDFLAGS@ -s
+   INSTALLFLAGS = -s
+endif
+
+# Various libraries and include directories
+LIBS       = @LIBS@
+LEXLIB     = @LEXLIB@
+
+
+# The named pipe that diald is using as a control FIFO.  You must run
+# diald with the "fifo ${DIALD_CTL}" option for this to work at all.  Be sure
+# that the pipe is writable by ${OWNER}.${GROUP} as defined above.
+CONTROL_FIFO = @CONTROL_FIFO@
+
+# The configuration file for the server
+CONF_FILE = @CONF_FILE@
+
+
+# No need to muck with anything below this
+
+# Client Definitions
+CLIENTINCLUDES = -I${PROJDIR}
+CLIENTLIB = ${LIBS} ${LEXLIB}
+CLIENTDEFINES =
+CLIENTBINS = diald-top
+
+# Server Definitions
+SERVERINCLUDES = -I${PROJDIR}
+SERVERLIB = ${LEXLIB}
+SERVERDEFINES = 
+SERVERBINS = diald-top-server
+
