@@ -23,7 +23,7 @@
  */
 
 static char     rcsid[] =
-    "$Id$";
+"$Id$";
 
 /*
  * Included Header Files 
@@ -52,7 +52,8 @@ static char     rcsid[] =
  */
 char           *control;
 char           *monitor;
-char           *cmd[] = {
+char           *cmd[] =
+{
     "up",
     "down",
     "force",
@@ -159,14 +160,12 @@ init_fifo(void)
 	    fprintf(stderr, "Couldn't bind to socket\n");
 	    exit(1);
 	}
-
 	sa.sin_addr.s_addr = remaddr.s_addr;
 	sa.sin_port = htons(1313);
 	if (connect(monitorfd, (struct sockaddr *) &sa, sizeof(sa)) < 0) {
 	    fprintf(stderr, "Couldn't connect to %s:1313\n", remoteip);
 	    exit(1);
 	}
-
 	fifo_ctl = fcntl(monitorfd, F_GETFL);
 	fifo_ctl |= O_NONBLOCK;
 	fcntl(monitorfd, F_SETFL, fifo_ctl);
@@ -179,7 +178,6 @@ init_fifo(void)
 	    perror("Could not open diald control pipe");
 	    exit(1);
 	}
-
 	umask(0002);
 	mknod(monitor, S_IFIFO | 0660, 0);
 
@@ -201,10 +199,15 @@ init_fifo(void)
 	/*
 	 * itz Sun Jan 17 13:36:07 PST 1999: don't overload the fifo with
 	 * useless junk 
+	 *
+	 * gjh Wed Jun 21 21:48:39 EDT 2000: I think that this may not work
+	 * precisely right with diald 0.99.4, so I am going to reverse it.
 	 */
-#ifdef TESTER
 	sprintf(line, "monitor %s", monitor);
-#else
+
+#if 0				/*
+				 * Was itz's patch 
+				 */
 	sprintf(line, "monitor %d %s", 0x3b, monitor);
 #endif
     }
@@ -234,12 +237,10 @@ init_fifo(void)
 	    exit(1);
 	}
     }
-
     if ((yyin = fdopen(monitorfd, "r")) == NULL) {
 	fprintf(stderr, "Could not fdopen diald monitor pipe\n");
 	exit(1);
     }
-
     format = (char *) malloc(80);
     sprintf(format, "%%-4.4s %%%d.%ds/%%-8.8s %%%d.%ds/%%-8.8s  %%s\n",
 	    ip_width, ip_width, ip_width, ip_width);
@@ -267,7 +268,6 @@ read_fifo(void)
 	fprintf(stderr, "diald-top: end of file on monitor pipe\n");
 	return (-1);
     }
-
     /*
      * Redisplay the packet list 
      */
