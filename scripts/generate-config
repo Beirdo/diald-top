@@ -1,0 +1,7 @@
+#! /bin/sh
+
+aclocal -I scripts/m4
+mv aclocal.m4 scripts/m4
+autoheader -I scripts/m4
+autoconf -I scripts/m4
+
