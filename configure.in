@@ -108,7 +108,7 @@ AC_PROG_YACC
 GJH_REQUIRE_PROG($LEX, flex)
 GJH_REQUIRE_PROG($YACC, bison -y)
 
-AC_LANG_C
+AC_LANG(C)
 AC_C_CONST
 
 
@@ -212,4 +212,5 @@ AC_EXEEXT
 AC_OBJEXT
 
 AC_CACHE_SAVE
-AC_OUTPUT(Makefile Makefile.def server/Makefile client/Makefile client/version.h diald-top.8)
+AC_CONFIG_FILES([Makefile Makefile.def server/Makefile client/Makefile client/version.h diald-top.8])
+AC_OUTPUT
