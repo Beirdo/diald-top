@@ -1,0 +1,38 @@
+# $Id$
+#
+# Makefile for diald-top package
+# 
+# (c) 1995-2002 Gavin J. Hurlbut
+# gjhurlbu@beirdo.ca
+#
+
+include ../Makefile.def
+
+PROJDIR = @top_srcdir@
+OBJS = thread.o shared_memory.o
+DESTLIB = libclient.a
+
+${PROJDIR}/% : %
+	${INSTALL} ${@F} $@
+
+all:	${DESTLIB}
+
+${DESTLIB}:	${OBJS}
+	${AR} rc $@ $+
+	${RANLIB} $@
+
+clean:
+	-${RM} ${OBJS} ${DESTLIB} core
+
+
+squeakyclean:	clean
+
+distclean:	squeakyclean
+	-${RM} Makefile
+	
+install:
+	
+
+.c.@OBJEXT@:
+	${CC} ${CFLAGS} ${CLIENTINCLUDES} ${CLIENTDEFINES} -c $< -o $@
+
