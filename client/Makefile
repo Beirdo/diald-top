@@ -12,7 +12,7 @@ OBJS = diald-top.o pipe.o resolve.o screen.o lex.yy.o y.tab.o parser.o
 DESTBINS = ${CLIENTBINS:%=../%}
 
 ../% : %
-	cp ${@F} $@
+	${CP} ${@F} $@
 
 all:	${DESTBINS}
 
@@ -20,10 +20,10 @@ diald-top:	${OBJS}
 	${CC} $(LDFLAGS) -o $@ $+ ${CLIENTLIB}
 
 distclean clean:
-	-rm -f ${OBJS} ${CLIENTBINS} tester core
+	-${RM} ${OBJS} ${CLIENTBINS} tester core
 
 squeakyclean:	clean
-	-rm -f y.tab.c y.tab.h y.output lex.yy.c
+	-${RM} y.tab.c y.tab.h y.output lex.yy.c
 
 install:
 	${MAKE} -C .. install-client

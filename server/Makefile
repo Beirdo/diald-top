@@ -13,13 +13,13 @@ OBJS = diald-top-server.o port-daemon.o port-queue.o fifo-server.o lex.yy.o \
 DESTBINS = ${SERVERBINS:%=../%}
 
 ../% : %
-	cp ${@F} $@
+	${CP} ${@F} $@
 
 all:	${DESTBINS}
 
 
 diald-top-server: ${OBJS}
-	gcc ${LDFLAGS} -o $@ $+ ${SERVERLIB}
+	${CC} ${LDFLAGS} -o $@ $+ ${SERVERLIB}
 
 lex.yy.c:	y.tab.h
 
@@ -31,11 +31,11 @@ y.tab.h y.tab.c:	conffile.y
 
 
 distclean clean:
-	-rm -f ${OBJS} ${SERVERBINS} core
+	-${RM} ${OBJS} ${SERVERBINS} core
 
 
 squeakyclean:	clean
-	-rm -f y.tab.c y.tab.h y.output lex.yy.c
+	-${RM} y.tab.c y.tab.h y.output lex.yy.c
 	
 install:
 	${MAKE} -C .. install-server

@@ -28,6 +28,7 @@ CC = gcc
 LEX = flex -CFe
 YACC = bison -dvy
 INSTALL = install
+CP = cp
 
 ifeq (${DEBUG},1)
    # Debug version

@@ -22,7 +22,10 @@ ${DIRS}:
 	${MAKE} -C $@
 
 clean squeakyclean::
-	-rm -f diald-top diald-top-server core
+	-${RM} diald-top diald-top-server core
+
+distclean::
+	-${RM} config.status config.log config.cache config.h
 
 install:	install-client install-server
 
