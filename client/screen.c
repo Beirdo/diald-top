@@ -58,8 +58,8 @@ char           *scrbuff[MAXBUFS];
 int             numbuff;
 int             ip_width;
 static char    *usagetext = "\n"
-    "DialD Packet statistics program (c) 1995-97 Gavin J. Hurlbut\n"
-    "%s \tgjhurlbu@beirdo.ott.uplink.on.ca\n"
+    "DialD Packet statistics program (c) 1995-2001 Gavin J. Hurlbut\n"
+    "%s \thttp://diald-top.sourceforge.net/\n"
     "\n"
     "Proper usage:\n"
     "\n"
@@ -226,12 +226,12 @@ screen_init(void)
     sprintf(fmt, "%%-s%%%ds%%-s", spcs);
     mvwprintw(full, LINE_COPYRIGHT, 0, fmt,
 	      "DialD Packet statistics program", "",
-	      "(c) 1995-97 Gavin J. Hurlbut");
+	      "(c) 1995-2001 Gavin J. Hurlbut");
 
     spcs = (COLS - 45 - strlen(revision)) / 2;
     sprintf(fmt, "%%-s%%%ds%%-s%%%ds%%-s", spcs, spcs);
     mvwprintw(full, LINE_REVISION, 0, fmt, revision, "",
-	      "gjhurlbu@beirdo.ott.uplink.on.ca", "", "(h) for help");
+	      "http://diald-top.sourceforge.net/", "", "(h) for help");
 
     ip_width = (COLS - 36) / 2;
     sprintf(fmt, "%%-4.4s %%%ds          %%%ds           %%s", ip_width,
